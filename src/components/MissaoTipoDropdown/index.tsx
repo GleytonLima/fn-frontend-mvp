@@ -33,7 +33,7 @@ export default function MissaoTipoDropdown({
 				<TextField
 					{...params}
 					fullWidth
-					label="Tipos de Missão"
+					label="Filtrar por Tipos de Missão"
 					variant="outlined"
 					error={!!fieldState?.error?.message}
 					helperText={fieldState?.error?.message}

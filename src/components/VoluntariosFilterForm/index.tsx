@@ -35,37 +35,39 @@ export const VoluntariosFilterForm = ({
 	return (
 		<form>
 			<Grid
-				display={'grid'}
-				alignItems={'start'}
-				justifyItems={'center'}
-				gap={'20px'}
-				padding={{ xs: '1rem 1.5rem', md: '2rem 20rem', lg: '2rem 30rem' }}
+				container
+				spacing={3}
+				style={{ marginTop: '20px', marginBottom: '20px' }}
 			>
-				<Controller
-					name="missaoTipo"
-					control={control}
-					render={({ field, fieldState }) => (
-						<MissaoTipoDropdown
-							fieldState={fieldState}
-							onChange={field.onChange}
-							value={field.value}
-						/>
-					)}
-				/>
-				<Controller
-					name="nome"
-					control={control}
-					render={({ field, fieldState }) => (
-						<TextField
-							{...field}
-							fullWidth
-							error={!!fieldState?.error?.message}
-							helperText={fieldState?.error?.message}
-							id="signup_input_name"
-							label="Nome Completo"
-						></TextField>
-					)}
-				/>
+				<Grid item xs={12} sm={6}>
+					<Controller
+						name="missaoTipo"
+						control={control}
+						render={({ field, fieldState }) => (
+							<MissaoTipoDropdown
+								fieldState={fieldState}
+								onChange={field.onChange}
+								value={field.value}
+							/>
+						)}
+					/>
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					<Controller
+						name="nome"
+						control={control}
+						render={({ field, fieldState }) => (
+							<TextField
+								{...field}
+								fullWidth
+								error={!!fieldState?.error?.message}
+								helperText={fieldState?.error?.message}
+								id="signup_input_name"
+								label="Nome Completo"
+							></TextField>
+						)}
+					/>
+				</Grid>
 			</Grid>
 			<Grid item xs={12}>
 				<Box display="flex" justifyContent="center" gap="20px">
