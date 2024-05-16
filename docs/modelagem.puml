@@ -1,0 +1,113 @@
+@startuml
+
+class Mission {
+    - missionId: int
+    - name: String
+    - description: String
+    - location: String
+    - geoDistributions: List<GeographicalDistribution>
+    - volunteers: List<Volunteer>
+    - donations: List<Donation>
+    - fieldOperations: List<FieldOperation>
+    - shelters: List<Shelter>
+    - news: List<News>
+    - resourceRequests: List<ResourceRequest>
+}
+
+class GeographicalDistribution {
+    - distributionId: int
+    - areaType: String
+    - areaName: String
+    - representationType: String
+    - coordinate: Coordinate
+    - coordinates: List<Coordinate>
+}
+
+class Coordinate {
+    - latitude: double
+    - longitude: double
+}
+
+class Volunteer {
+    - volunteerId: int
+    - name: String
+    - expertise: String
+    - missions: List<Mission>
+}
+
+class Donation {
+    - donationId: int
+    - mission: Mission
+    - type: String
+    - amount: double
+}
+
+class FieldOperation {
+    - operationId: int
+    - mission: Mission
+    - type: String
+    - startDate: String
+    - endDate: String
+}
+
+class Shelter {
+    - shelterId: int
+    - mission: Mission
+    - location: String
+    - capacity: int
+}
+
+class News {
+    - newsId: int
+    - mission: Mission
+    - title: String
+    - content: String
+    - date: String
+}
+
+class Resource {
+    - resourceId: int
+    - type: String
+    - otherDetails: String
+}
+
+class Stock {
+    - stockId: int
+    - resource: Resource
+    - quantity: int
+    - location: String
+}
+
+class ResourceRequest {
+    - requestId: int
+    - mission: Mission
+    - resource: Resource
+    - quantityRequested: int
+    - status: String
+}
+
+class ResourceShipment {
+    - shipmentId: int
+    - resourceRequest: ResourceRequest
+    - stock: Stock
+    - quantityShipped: int
+    - shipmentDate: Date
+}
+
+Mission "1" o-- "0..*" GeographicalDistribution
+Mission "1" o-- "0..*" Volunteer
+Mission "1" o-- "0..*" Donation
+Mission "1" o-- "0..*" FieldOperation
+Mission "1" o-- "0..*" Shelter
+Mission "1" o-- "0..*" News
+Mission "1" o-- "0..*" ResourceRequest
+Resource "1" o-- "0..*" Stock
+ResourceRequest "1" o-- "1" Mission
+ResourceRequest "1" o-- "1" Resource
+ResourceShipment "1" o-- "1" ResourceRequest
+ResourceShipment "1" o-- "1" Stock
+Volunteer "1" o-- "0..*" Mission
+GeographicalDistribution "1" o-- "1" Coordinate
+GeographicalDistribution "1" o-- "0..*" Coordinate
+
+@enduml

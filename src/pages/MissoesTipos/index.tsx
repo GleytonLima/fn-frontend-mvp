@@ -15,7 +15,7 @@ import MainBar from '../../components/Header';
 import { MissaoTipo } from '../../models/missao';
 import { listarMissoesTipos } from '../../services/missoes.service';
 
-export const Missoes = () => {
+export const MissoesTiposPage = () => {
 	const [missoes, setMissoes] = useState([]);
 	useEffect(() => {
 		listarMissoesTipos().then((voluntarios) => {

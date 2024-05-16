@@ -32,6 +32,10 @@ export default function MissaoTipoDropdown({
 			renderInput={(params) => (
 				<TextField
 					{...params}
+					inputProps={{
+						...params.inputProps,
+						autoComplete: 'new-password'
+					}}
 					fullWidth
 					label="Filtrar por Tipos de Missão"
 					variant="outlined"

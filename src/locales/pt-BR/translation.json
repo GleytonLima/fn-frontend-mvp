@@ -1,0 +1,40 @@
+{
+	"commons": {
+		"save": "Salvar",
+		"cancel": "Cancelar",
+		"edit": "Editar",
+		"delete": "Excluir",
+		"add": "Adicionar",
+		"close": "Fechar",
+		"search": "Pesquisar",
+		"confirm": "Confirmar",
+		"yes": "Sim",
+		"no": "Não",
+		"error": "Erro"
+	},
+	"SupplyMedicineDetails": {
+		"title": "Insumo/Medicamento"
+	},
+	"SupplyMedicine": {
+		"name": "Nome",
+		"category": "Categoria",
+		"quantity": "Quantidade",
+		"unit": "Unidade",
+		"expiryDate": "Data de Validade",
+		"date": "Data",
+		"supplier": "Fornecedor"
+	},
+	"EquipmentDetails": {
+		"title": "Equipamento"
+	},
+	"Equipment": {
+		"name": "Nome",
+		"category": "Categoria",
+		"quantity": "Quantidade",
+		"status": "Status",
+		"location": "Localização"
+	},
+	"EquipmentsPage": {
+		"title": "Equipamentos"
+	}
+}

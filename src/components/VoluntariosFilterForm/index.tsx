@@ -59,10 +59,13 @@ export const VoluntariosFilterForm = ({
 						render={({ field, fieldState }) => (
 							<TextField
 								{...field}
+								inputProps={{
+									autoComplete: 'new-password'
+								}}
 								fullWidth
+								autoComplete="new-password"
 								error={!!fieldState?.error?.message}
 								helperText={fieldState?.error?.message}
-								id="signup_input_name"
 								label="Nome Completo"
 							></TextField>
 						)}
