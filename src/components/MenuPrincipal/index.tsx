@@ -225,6 +225,12 @@ export default function TemporaryDrawer({
 							</ListItemIcon>
 							<ListItemText primary="Coordenação de Ações" />
 						</ListItemButton>
+						<ListItemButton sx={{ pl: 4 }} component={Link} to="/teste">
+							<ListItemIcon>
+								<GroupWorkIcon />
+							</ListItemIcon>
+							<ListItemText primary="Testes" />
+						</ListItemButton>
 					</List>
 				</Collapse>
 			</List>

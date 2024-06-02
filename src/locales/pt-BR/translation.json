@@ -10,7 +10,22 @@
 		"confirm": "Confirmar",
 		"yes": "Sim",
 		"no": "Não",
-		"error": "Erro"
+		"error": "Erro",
+		"addField": "Adicionar Campo",
+		"removeField": "Remover Campo",
+		"addGroup": "Adicionar Grupo",
+		"removeGroup": "Remover Grupo"
+	},
+	"FilterGroup": {
+		"language": "Idioma",
+		"degree": "Graduação",
+		"postgraduate_degree": "Pós-Graduação",
+		"medical_specialization": "Especialização Médica",
+		"label": "Valor",
+		"placeholder": "Selecione um valor",
+		"groupOperator": "Operador do Grupo",
+		"groupOperatorHint": "Selecione o tipo de grupo: E ou OU",
+		"field": "Atributo"
 	},
 	"SupplyMedicineDetails": {
 		"title": "Insumo/Medicamento"

@@ -16,6 +16,7 @@ import { MissionsPage } from './pages/Missoes/index.tsx';
 import { MissoesTiposPage } from './pages/MissoesTipos/index.tsx';
 import SupplyMedicinePage from './pages/SupplyMedicine/index.tsx';
 import SupplyMedicinesPage from './pages/SupplyMedicines/index.tsx';
+import FilterBuilderTestPage from './pages/Test/index.tsx';
 import { VoluntarioCreateEditPage } from './pages/VoluntarioCreateEdit/index.tsx';
 import { VoluntariosPage } from './pages/Voluntarios/index.tsx';
 
@@ -54,6 +55,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				path="/voluntarios/:id/edit"
 				element={<VoluntarioCreateEditPage />}
 			></Route>
+			<Route path="/teste" element={<FilterBuilderTestPage />}></Route>
 			<Route path="/voluntarios" element={<VoluntariosPage />}></Route>
 		</Routes>
 	</BrowserRouter>

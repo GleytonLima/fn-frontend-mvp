@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { VoluntariosFilterForm } from '../../components/VoluntariosFilterForm';
 import { MissaoTipo } from '../../models/missao';
 import { Voluntario } from '../../models/voluntario';
-import { listarVoluntariosElegiveisPorMissao } from '../../services/voluntarios.service';
+import { listVolunteersByMissionType } from '../../services/voluntarios.service';
 
 interface Filtros {
 	missaoTipo: MissaoTipo | null;
@@ -47,7 +47,7 @@ export const VoluntariosTable = () => {
 		nome: ''
 	});
 	useEffect(() => {
-		listarVoluntariosElegiveisPorMissao(filtros).then((voluntarios) => {
+		listVolunteersByMissionType(filtros).then((voluntarios) => {
 			console.log('Fim da requisição de voluntários');
 			setVoluntarios(voluntarios);
 		});
