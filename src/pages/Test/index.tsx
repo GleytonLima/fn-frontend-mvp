@@ -2,7 +2,7 @@ import { Button, Container, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import FilterBuilder from '../../components/FilterBuilder';
 import { FilterGroupType } from '../../components/FilterBuilder/filter';
-import { searchVolunteers } from '../../services/voluntarios.service';
+import { searchVolunteers } from '../../services/volunteer.service';
 
 const FilterBuilderTestPage: React.FC = () => {
 	const [filter, setFilter] = useState<FilterGroupType>({

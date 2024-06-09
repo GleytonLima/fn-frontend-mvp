@@ -1,4 +1,4 @@
-import { MissaoTipo } from '../models/missao';
+import { MissaoTipo } from '../models/mission';
 import api from './api.config';
 
 export const listarMissoesTipos = async () => {

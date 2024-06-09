@@ -4,15 +4,9 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { MissaoTipo } from '../../models/missao';
 import { labelDisplayedRows } from '../../models/pagination-translate';
-import { Volunteer } from '../../models/voluntario';
-import { listVolunteersByMissionType } from '../../services/voluntarios.service';
-
-interface Filtros {
-	missaoTipo: MissaoTipo | null;
-	nome: string;
-}
+import { Volunteer } from '../../models/volunteer';
+import { listVolunteersByMissionType } from '../../services/volunteer.service';
 
 export const VoluntariosTable = () => {
 	const [loading, setLoading] = useState(false);
@@ -21,11 +15,12 @@ export const VoluntariosTable = () => {
 	const { t } = useTranslation();
 
 	const navigate = useNavigate();
-	const handleEdit = (id: string) => {
+	const handleEdit = (id: number) => {
 		navigate(`/voluntarios/${id}/edit`);
 	};
 
 	const handleClick = (event: MouseEvent<HTMLElement>) => {
+		event.stopPropagation();
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -43,18 +38,25 @@ export const VoluntariosTable = () => {
 		total: 0,
 		offset: 0
 	});
-	const [filtros, setFiltros] = useState<Filtros>({
-		missaoTipo: null,
-		nome: ''
-	});
-	useEffect(() => {
+
+	const handlePageChange = (params: { page: number; pageSize: number }) => {
+		console.log('Início da requisição de voluntários', params);
 		setLoading(true);
-		listVolunteersByMissionType(filtros).then((voluntarios) => {
+		listVolunteersByMissionType({
+			limit: params.pageSize,
+			offset: params.page
+		}).then((voluntarios) => {
 			console.log('Fim da requisição de voluntários');
 			setVoluntarios(voluntarios);
 			setLoading(false);
 		});
-	}, [filtros]);
+	};
+	useEffect(() => {
+		handlePageChange({
+			page: 0,
+			pageSize: 10
+		});
+	}, []);
 
 	const columns: GridColDef<(typeof voluntarios.data)[number]>[] = [
 		{
@@ -66,6 +68,28 @@ export const VoluntariosTable = () => {
 			field: 'email',
 			headerName: t('Volunteer.email'),
 			flex: 1
+		},
+		{
+			field: 'volunteer_degree',
+			headerName: t('Volunteer.degree'),
+			flex: 1,
+			renderCell: (params) => {
+				return params.row.volunteer_degree
+					.map((degree) => degree.degree.name)
+					.join(', ');
+			}
+		},
+		{
+			field: 'location',
+			headerName: t('Volunteer.location'),
+			flex: 1,
+			renderCell: (params) => {
+				return `${params.row.location?.name}${
+					params.row.location?.location
+						? ` - ${params.row.location?.location?.name}`
+						: ''
+				}`;
+			}
 		},
 		{
 			field: 'action',
@@ -87,11 +111,10 @@ export const VoluntariosTable = () => {
 							open={open}
 							onClose={handleClose}
 						>
-							<MenuItem onClick={handleClose}>Detalhes</MenuItem>
-							<MenuItem onClick={() => handleEdit(params.row.email)}>
-								Editar
+							<MenuItem onClick={() => handleEdit(params.row.id)}>
+								{t('commons.edit')}
 							</MenuItem>
-							<MenuItem onClick={handleClose}>Excluir</MenuItem>
+							<MenuItem onClick={handleClose}>{t('commons.delete')}</MenuItem>
 						</Menu>
 					</>
 				);
@@ -102,7 +125,7 @@ export const VoluntariosTable = () => {
 	return (
 		<>
 			<Box sx={{ p: 4 }}>
-				<Box sx={{ height: 400, width: '100%' }}>
+				<Box sx={{ height: 371, width: '100%' }}>
 					<Typography variant="h5" component="h2">
 						{t('VoluntariosTable.title')}
 					</Typography>
@@ -110,20 +133,19 @@ export const VoluntariosTable = () => {
 						rows={voluntarios.data}
 						columns={columns}
 						loading={loading}
-						initialState={{
-							pagination: {
-								paginationModel: {
-									pageSize: 5
-								}
-							}
-						}}
-						autoPageSize
+						paginationMode="server"
+						rowCount={voluntarios.total}
 						pageSizeOptions={[1, 10, 50]}
 						disableRowSelectionOnClick
 						localeText={{
+							noRowsLabel: t('VoluntariosTable.noRowsLabel'),
 							MuiTablePagination: {
 								labelDisplayedRows
 							}
+						}}
+						onPaginationModelChange={handlePageChange}
+						onRowClick={(params) => {
+							handleEdit(params.row.id);
 						}}
 					/>
 				</Box>

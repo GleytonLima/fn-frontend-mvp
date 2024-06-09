@@ -19,3 +19,8 @@ export const labelDisplayedRows = (
 			: `${t('commons.pagination.moreThan')} ${estimated > to ? estimated : to}`
 	}`;
 };
+
+export const labelRowsPerPage = () => {
+	const { t } = i18n;
+	return t('commons.pagination.rowsPerPage');
+};

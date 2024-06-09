@@ -4,6 +4,7 @@
 		"cancel": "Cancelar",
 		"edit": "Editar",
 		"delete": "Excluir",
+		"remove": "Remover",
 		"add": "Adicionar",
 		"close": "Fechar",
 		"search": "Pesquisar",
@@ -19,7 +20,8 @@
 		"details": "Detalhes",
 		"pagination": {
 			"of": "de",
-			"moreThan": "mais de"
+			"moreThan": "mais de",
+			"rowsPerPage": "Linhas por página"
 		}
 	},
 	"BasicAutocomplete": {
@@ -62,10 +64,32 @@
 		"name": "Nome",
 		"degrees": "Graduações",
 		"postgraduateDegrees": "Pós-Graduações",
-		"email": "E-mail"
+		"email": "E-mail",
+		"phone": "Telefone",
+		"location": "Localização",
+		"document": "Número do Documento (RG, CPF ou outro)",
+		"resumeLink": "Link do Currículo",
+		"travelAvailability": "Disponibilidade para Viagem",
+		"active": "Ativo",
+		"degree": "Graduação"
+	},
+	"VolunteerDegree": {
+		"title": "Graduação"
+	},
+	"VolunteerForm": {
+		"title": "Voluntário",
+		"basicData": "Dados Básicos",
+		"searchLocation": "Pesquisar Localização",
+		"invalidName": "Nome inválido",
+		"invalidEmail": "E-mail inválido",
+		"invalidPhone": "Telefone inválido",
+		"invalidLocation": "Localização inválida",
+		"invalidDocument": "Número do Documento inválido",
+		"invalidResumeLink": "Link do Currículo inválido"
 	},
 	"VoluntariosTable": {
-		"title": "Voluntários"
+		"title": "Voluntários",
+		"noRowsLabel": "Nenhum voluntário encontrado"
 	},
 	"EquipmentsPage": {
 		"title": "Equipamentos"

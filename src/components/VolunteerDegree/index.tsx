@@ -1,0 +1,193 @@
+import { Button, Grid, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
+import { useCallback, useEffect, useState } from 'react';
+import { FieldValues, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { labelDisplayedRows } from '../../models/pagination-translate';
+import {
+	addVolunteerDegree,
+	listVolunteerDegrees,
+	removeVolunteerDegree
+} from '../../services/volunteer-degree.service';
+import BasicAutocomplete from '../BasicAutocomplete';
+import { VolunteerSchema } from '../VolunteerForm';
+
+interface VolunteerDegreeProps {
+	volunteer?: VolunteerSchema;
+	onSubmit: (payload: { degree?: string }) => void;
+}
+
+export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
+	const [loading, setLoading] = useState(false);
+	const { handleSubmit, setValue } = useForm();
+	const [degrees, setDegrees] = useState<{
+		data: {
+			volunteer_id: number;
+			degree_id: number;
+			degree: { id: number; name: string };
+		}[];
+		limit: number;
+		total: number;
+		offset: number;
+	}>({
+		data: [] as {
+			volunteer_id: number;
+			degree_id: number;
+			degree: { id: number; name: string };
+		}[],
+		limit: 5,
+		total: 0,
+		offset: 0
+	});
+	const { t } = useTranslation();
+
+	const handleRemoveVolunteerDegree = useCallback(
+		(row: {
+				volunteer_id: number;
+				degree_id: number;
+				degree: { id: number; name: string };
+			}) =>
+			() => {
+				removeVolunteerDegree(row.volunteer_id, row.degree_id)
+					.then(() => {
+						handlePageChange({
+							page: 0,
+							pageSize: 5
+						});
+					})
+					.catch((err) => {
+						console.error(err);
+					});
+			},
+		[]
+	);
+
+	const columns: GridColDef<(typeof degrees.data)[number]>[] = [
+		{
+			field: 'degree',
+			headerName: t('Volunteer.name'),
+			flex: 1,
+			renderCell: (params) => {
+				return params.row.degree.name;
+			}
+		},
+		{
+			field: 'actions',
+			headerName: t('commons.actions'),
+			width: 150,
+			renderCell: (params) => {
+				return (
+					<Button
+						variant="contained"
+						color="error"
+						onClick={handleRemoveVolunteerDegree(params.row)}
+					>
+						{t('commons.remove')}
+					</Button>
+				);
+			}
+		}
+	];
+
+	const onSubmit = useCallback((data: FieldValues) => {
+		if (!volunteer?.id) {
+			return;
+		}
+		addVolunteerDegree(volunteer.id, data.degree.id)
+			.then(() => {
+				handlePageChange({
+					page: 0,
+					pageSize: 5
+				});
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}, []);
+
+	const handlePageChange = useCallback((params: GridPaginationModel) => {
+		console.log('Início da requisição de graus de voluntários', params);
+		if (params.pageSize <= 0) {
+			return;
+		}
+		if (!volunteer?.id) {
+			return;
+		}
+		setLoading(true);
+		listVolunteerDegrees(volunteer?.id, {
+			limit: params.pageSize,
+			offset: params.page
+		})
+			.then((degrees) => {
+				console.log('Fim da requisição de graus de voluntários', degrees);
+				setDegrees(degrees);
+				setLoading(false);
+			})
+			.catch((err) => {
+				console.error(err);
+				setLoading(false);
+			});
+	}, []);
+
+	useEffect(() => {
+		handlePageChange({
+			page: 0,
+			pageSize: 5
+		});
+	}, []);
+
+	return (
+		<>
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<Typography variant="h6" component="h2" gutterBottom>
+					{t('VolunteerDegree.title')}
+				</Typography>
+				<Grid container spacing={1} padding={2}>
+					<Grid item xs={9}>
+						<BasicAutocomplete
+							tableName="degree"
+							defaultValue={null}
+							config={{
+								label: t('Volunteer.degree'),
+								placeholder: ''
+							}}
+							onChange={(field) => {
+								console.log(field);
+								setValue('degree', field);
+							}}
+						/>
+					</Grid>
+					<Grid item xs={3}>
+						<Button type="submit" variant="contained" color="primary">
+							{t('commons.add')}
+						</Button>
+					</Grid>
+				</Grid>
+				<DataGrid
+					rows={degrees.data}
+					columns={columns}
+					loading={loading}
+					paginationMode="server"
+					rowCount={degrees.total}
+					pageSizeOptions={[1, 10, 50]}
+					getRowId={(row) =>
+						row.volunteer_id.toString() + row.degree_id.toString()
+					}
+					disableRowSelectionOnClick
+					localeText={{
+						noRowsLabel: t('VoluntariosTable.noRowsLabel'),
+						MuiTablePagination: {
+							labelDisplayedRows
+						}
+					}}
+					onPaginationModelChange={(params) => {
+						handlePageChange({
+							page: params.page,
+							pageSize: params.pageSize
+						});
+					}}
+				/>
+			</form>
+		</>
+	);
+};

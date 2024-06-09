@@ -1,7 +1,6 @@
 import {
 	Autocomplete,
 	CircularProgress,
-	Grid,
 	TextField,
 	debounce
 } from '@mui/material';
@@ -12,19 +11,18 @@ import { listBasicTable } from '../../services/basic-tables.service';
 
 interface BasicAutocompleteProps {
 	tableName: string;
-	field: BasicTable | BasicTable[] | null;
-	config: { label: string; placeholder: string; multiple: boolean };
+	defaultValue?: BasicTable | null;
+	config: { label: string; placeholder: string };
 	onChange: (field: BasicTable | BasicTable[] | null) => void;
 }
 
 const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 	(props, ref) => {
-		const { tableName, field, config, onChange } = props;
+		const { tableName, defaultValue, config, onChange } = props;
 		const [options, setOptions] = useState<{ id: number; name: string }[]>([]);
 		const [inputValue, setInputValue] = useState('');
 		const [loading, setLoading] = useState(false);
 		const [error, setError] = useState(false);
-		const [value, setValue] = useState<BasicTable | BasicTable[] | null>([]);
 		const { t } = useTranslation();
 
 		const DEBOUNCE_DELAY = 500;
@@ -41,7 +39,7 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 					const newOptions = await listBasicTable({
 						tableName,
 						name: newValue,
-						limit: 20,
+						limit: 5,
 						offset: 0
 					});
 					newOptions.push(DEFAULT_OPTION);
@@ -65,18 +63,17 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 		}, [debouncedFetchOptions]);
 
 		return (
-			<Grid>
+			<>
 				<Autocomplete
 					ref={ref}
 					fullWidth
 					id="value-select"
 					options={options}
-					multiple={!!config.multiple}
-					onChange={(event, newValue) => {
+					defaultValue={defaultValue}
+					onChange={(_, newValue) => {
 						onChange(newValue);
-						setValue(newValue);
 					}}
-					onInputChange={(event, newInputValue) => {
+					onInputChange={(_, newInputValue) => {
 						setInputValue(newInputValue);
 						debouncedFetchOptions(newInputValue);
 					}}
@@ -84,7 +81,6 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 					getOptionDisabled={(option) => option.id === -1}
 					getOptionLabel={(option) => option.name}
 					filterSelectedOptions
-					value={value}
 					loading={loading}
 					renderInput={(params) => (
 						<TextField
@@ -108,7 +104,7 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 						/>
 					)}
 				/>
-			</Grid>
+			</>
 		);
 	}
 );
