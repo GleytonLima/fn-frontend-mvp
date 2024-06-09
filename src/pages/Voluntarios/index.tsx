@@ -19,16 +19,7 @@ export const VoluntariosPage = () => {
 								navigate('/voluntarios/create');
 							}}
 						>
-							Cadastrar Voluntário
-						</Button>
-						<Button
-							variant="contained"
-							color="secondary"
-							onClick={() => {
-								console.log('Notificar voluntários');
-							}}
-						>
-							Notificar Voluntários
+							Cadastrar
 						</Button>
 					</Box>
 				</Grid>

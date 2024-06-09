@@ -14,7 +14,16 @@
 		"addField": "Adicionar Campo",
 		"removeField": "Remover Campo",
 		"addGroup": "Adicionar Grupo",
-		"removeGroup": "Remover Grupo"
+		"removeGroup": "Remover Grupo",
+		"actions": "Ações",
+		"details": "Detalhes",
+		"pagination": {
+			"of": "de",
+			"moreThan": "mais de"
+		}
+	},
+	"BasicAutocomplete": {
+		"typeForMoreResults": "Digite para mais resultados..."
 	},
 	"FilterGroup": {
 		"language": "Idioma",
@@ -48,6 +57,15 @@
 		"quantity": "Quantidade",
 		"status": "Status",
 		"location": "Localização"
+	},
+	"Volunteer": {
+		"name": "Nome",
+		"degrees": "Graduações",
+		"postgraduateDegrees": "Pós-Graduações",
+		"email": "E-mail"
+	},
+	"VoluntariosTable": {
+		"title": "Voluntários"
 	},
 	"EquipmentsPage": {
 		"title": "Equipamentos"

@@ -6,15 +6,14 @@ export const listVolunteersByMissionType = async (filtros: {
 	nome: string;
 }) => {
 	try {
-		const { missaoTipo: missao, nome } = filtros;
 		const queryParams = new URLSearchParams();
-		if (missao?._id) {
-			queryParams.append('missao_id', missao._id);
-		}
-		if (nome) {
-			queryParams.append('nome_completo', nome);
-		}
-		const response = await api.get(`/api/voluntarios?${queryParams}`);
+		queryParams.append('limit', '10');
+		queryParams.append('offset', '0');
+		queryParams.append(
+			'expands',
+			'volunteer_degree,volunteer_postgraduate_degree'
+		);
+		const response = await api.get(`/volunteers?${queryParams}`);
 		return response.data;
 	} catch (error) {
 		console.error(error);

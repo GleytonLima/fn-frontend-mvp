@@ -1,23 +1,12 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {
-	Box,
-	IconButton,
-	Menu,
-	MenuItem,
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Typography
-} from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MouseEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { VoluntariosFilterForm } from '../../components/VoluntariosFilterForm';
 import { MissaoTipo } from '../../models/missao';
-import { Voluntario } from '../../models/voluntario';
+import { labelDisplayedRows } from '../../models/pagination-translate';
+import { Volunteer } from '../../models/voluntario';
 import { listVolunteersByMissionType } from '../../services/voluntarios.service';
 
 interface Filtros {
@@ -26,8 +15,10 @@ interface Filtros {
 }
 
 export const VoluntariosTable = () => {
+	const [loading, setLoading] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
+	const { t } = useTranslation();
 
 	const navigate = useNavigate();
 	const handleEdit = (id: string) => {
@@ -41,84 +32,101 @@ export const VoluntariosTable = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	const [voluntarios, setVoluntarios] = useState<Voluntario[]>([]);
+	const [voluntarios, setVoluntarios] = useState<{
+		data: Volunteer[];
+		limit: number;
+		total: number;
+		offset: number;
+	}>({
+		data: [] as Volunteer[],
+		limit: 10,
+		total: 0,
+		offset: 0
+	});
 	const [filtros, setFiltros] = useState<Filtros>({
 		missaoTipo: null,
 		nome: ''
 	});
 	useEffect(() => {
+		setLoading(true);
 		listVolunteersByMissionType(filtros).then((voluntarios) => {
 			console.log('Fim da requisição de voluntários');
 			setVoluntarios(voluntarios);
+			setLoading(false);
 		});
 	}, [filtros]);
 
+	const columns: GridColDef<(typeof voluntarios.data)[number]>[] = [
+		{
+			field: 'full_name',
+			headerName: t('Volunteer.name'),
+			flex: 1
+		},
+		{
+			field: 'email',
+			headerName: t('Volunteer.email'),
+			flex: 1
+		},
+		{
+			field: 'action',
+			headerName: t('commons.actions'),
+			renderCell: (params) => {
+				return (
+					<>
+						<IconButton
+							aria-label="more"
+							aria-controls="long-menu"
+							aria-haspopup="true"
+							onClick={handleClick}
+						>
+							<MoreVertIcon />
+						</IconButton>
+						<Menu
+							id="long-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+						>
+							<MenuItem onClick={handleClose}>Detalhes</MenuItem>
+							<MenuItem onClick={() => handleEdit(params.row.email)}>
+								Editar
+							</MenuItem>
+							<MenuItem onClick={handleClose}>Excluir</MenuItem>
+						</Menu>
+					</>
+				);
+			}
+		}
+	];
+
 	return (
 		<>
-			<Box component="section" sx={{ p: 2 }}>
-				<Typography variant="h5" component="h2">
-					Voluntários
-				</Typography>
-				<VoluntariosFilterForm
-					onSubmit={(payload) => {
-						setFiltros(
-							payload as { missaoTipo: MissaoTipo | null; nome: string }
-						);
-						console.log('Filtros', payload);
-						return Promise.resolve();
-					}}
-				/>
-				<br />
-				<TableContainer component={Paper}>
-					<Table aria-label="simple table">
-						<TableHead>
-							<TableRow>
-								<TableCell align="center">Nome</TableCell>
-								<TableCell align="center">Gradução</TableCell>
-								<TableCell align="center">Especialização</TableCell>
-								<TableCell align="center">Email</TableCell>
-								<TableCell align="center">Ações</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{voluntarios.map((v: Voluntario) => (
-								<TableRow
-									key={v.nomeCompleto}
-									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-								>
-									<TableCell component="th" scope="row" align="center">
-										{v.nomeCompleto}
-									</TableCell>
-									<TableCell align="center">{v.graduacaoFormacao}</TableCell>
-									<TableCell align="center">{v.especializacao}</TableCell>
-									<TableCell align="center">{v.email}</TableCell>
-									<TableCell align="center">
-										<IconButton
-											aria-label="more"
-											aria-controls="long-menu"
-											aria-haspopup="true"
-											onClick={handleClick}
-										>
-											<MoreVertIcon />
-										</IconButton>
-										<Menu
-											id="long-menu"
-											anchorEl={anchorEl}
-											open={open}
-											onClose={handleClose}
-										>
-											<MenuItem onClick={handleClose}>Detalhes</MenuItem>
-											<MenuItem onClick={() => handleEdit(v.email)}>
-												Editar
-											</MenuItem>
-											<MenuItem onClick={handleClose}>Excluir</MenuItem>
-										</Menu>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</TableContainer>
+			<Box sx={{ p: 4 }}>
+				<Box sx={{ height: 400, width: '100%' }}>
+					<Typography variant="h5" component="h2">
+						{t('VoluntariosTable.title')}
+					</Typography>
+					<DataGrid
+						rows={voluntarios.data}
+						columns={columns}
+						loading={loading}
+						initialState={{
+							pagination: {
+								paginationModel: {
+									pageSize: 5
+								}
+							}
+						}}
+						autoPageSize
+						pageSizeOptions={[1, 10, 50]}
+						disableRowSelectionOnClick
+						localeText={{
+							MuiTablePagination: {
+								labelDisplayedRows
+							}
+						}}
+					/>
+				</Box>
 			</Box>
 		</>
 	);

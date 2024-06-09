@@ -1,15 +1,9 @@
-export type Voluntario = {
+import { BasicTable } from './basic-table';
+
+export type Volunteer = {
 	id: number;
-	nomeCompleto: string;
-	graduacaoFormacao: string;
-	especializacao: string;
-	areaAtuacao: string;
-	registroConselhoClasse: string;
-	disponibilidadeViagens: string;
-	cpf: string;
-	uf: string;
-	celularWhatsapp: string;
+	full_name: string;
+	volunteer_degree: { degree: BasicTable }[];
+	volunteer_postgraduate_degree: { postgraduate_degree: BasicTable }[];
 	email: string;
-	dominioIdiomas: string[];
-	linkCurriculoLattes: string;
 };
