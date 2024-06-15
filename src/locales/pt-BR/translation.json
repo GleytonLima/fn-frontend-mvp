@@ -75,7 +75,8 @@
 		"degree": "Graduação",
 		"postgraduateDegree": "Pós-Graduação",
 		"language": "Idioma",
-		"vaccine": "Vacina"
+		"vaccine": "Vacina",
+		"health_status": "Status de Saúde"
 	},
 	"VolunteerDegree": {
 		"title": "Graduações",
@@ -94,6 +95,12 @@
 		"dose_number": "Dose",
 		"date_administered": "Data de Administração",
 		"noRowsLabel": "Nenhuma dose de vacina encontrada"
+	},
+	"VolunteerHealthStatus": {
+		"title": "Status de Saúde",
+		"status": "Status",
+		"updated_at": "Data",
+		"noRowsLabel": "Nenhum status de saúde encontrado"
 	},
 	"VolunteerForm": {
 		"title": "Voluntário",

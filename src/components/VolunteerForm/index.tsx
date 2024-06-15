@@ -21,6 +21,7 @@ import { CustomLocation } from '../../models/location';
 import { listLocations } from '../../services/locations.service';
 import TextMaskCustom from '../TextMaskCustom';
 import { VolunteerDegree } from '../VolunteerDegree';
+import { VolunteerHealthStatus } from '../VolunteerHealthStatus';
 import { VolunteerLanguage } from '../VolunteerLanguage';
 import { VolunteerPostgraduateDegree } from '../VolunteerPostgraduateDegree';
 import { VolunteerVaccineDose } from '../VolunteerVaccineDose';
@@ -282,6 +283,14 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 			<br />
 			<Divider />
 			<VolunteerVaccineDose
+				volunteer={volunteer}
+				onSubmit={(e) => {
+					console.log(e);
+				}}
+			/>
+			<br />
+			<Divider />
+			<VolunteerHealthStatus
 				volunteer={volunteer}
 				onSubmit={(e) => {
 					console.log(e);
