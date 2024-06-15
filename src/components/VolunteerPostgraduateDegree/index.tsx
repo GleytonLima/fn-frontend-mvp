@@ -151,12 +151,12 @@ export const VolunteerPostgraduateDegree = ({
 							tableName="postgraduate_degree"
 							defaultValue={null}
 							config={{
-								label: t('Volunteer.postgraduateDegrees'),
+								label: t('Volunteer.postgraduateDegree'),
 								placeholder: ''
 							}}
 							onChange={(field) => {
 								console.log(field);
-								setValue('degree', field);
+								setValue('postgraduate_degree', field);
 							}}
 						/>
 					</Grid>

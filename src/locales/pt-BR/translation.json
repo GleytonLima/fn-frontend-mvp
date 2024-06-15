@@ -72,7 +72,10 @@
 		"resumeLink": "Link do Currículo",
 		"travelAvailability": "Disponibilidade para Viagem",
 		"active": "Ativo",
-		"degree": "Graduação"
+		"degree": "Graduação",
+		"postgraduateDegree": "Pós-Graduação",
+		"language": "Idioma",
+		"vaccine": "Vacina"
 	},
 	"VolunteerDegree": {
 		"title": "Graduações",
@@ -85,6 +88,12 @@
 	"VolunteerLanguage": {
 		"title": "Idiomas",
 		"noRowsLabel": "Nenhum idioma encontrado"
+	},
+	"VolunteerVaccineDose": {
+		"title": "Doses de Vacina",
+		"dose_number": "Dose",
+		"date_administered": "Data de Administração",
+		"noRowsLabel": "Nenhuma dose de vacina encontrada"
 	},
 	"VolunteerForm": {
 		"title": "Voluntário",

@@ -23,6 +23,7 @@ import TextMaskCustom from '../TextMaskCustom';
 import { VolunteerDegree } from '../VolunteerDegree';
 import { VolunteerLanguage } from '../VolunteerLanguage';
 import { VolunteerPostgraduateDegree } from '../VolunteerPostgraduateDegree';
+import { VolunteerVaccineDose } from '../VolunteerVaccineDose';
 
 const locationSchema = z.object({
 	id: z.number(),
@@ -273,6 +274,14 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 			<br />
 			<Divider />
 			<VolunteerLanguage
+				volunteer={volunteer}
+				onSubmit={(e) => {
+					console.log(e);
+				}}
+			/>
+			<br />
+			<Divider />
+			<VolunteerVaccineDose
 				volunteer={volunteer}
 				onSubmit={(e) => {
 					console.log(e);

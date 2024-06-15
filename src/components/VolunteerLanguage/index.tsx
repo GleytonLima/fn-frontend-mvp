@@ -149,12 +149,12 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 							tableName="language"
 							defaultValue={null}
 							config={{
-								label: t('Volunteer.postgraduateDegrees'),
+								label: t('Volunteer.language'),
 								placeholder: ''
 							}}
 							onChange={(field) => {
 								console.log(field);
-								setValue('degree', field);
+								setValue('language', field);
 							}}
 						/>
 					</Grid>
