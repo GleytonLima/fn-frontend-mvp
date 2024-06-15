@@ -64,6 +64,33 @@ export const VolunteerHealthStatus = ({
 	});
 	const { t } = useTranslation();
 
+	const handlePageChange = useCallback(
+		(params: GridPaginationModel) => {
+			console.log('Início da requisição de graus de voluntários', params);
+			if (params.pageSize <= 0) {
+				return;
+			}
+			if (!volunteer?.id) {
+				return;
+			}
+			setLoading(true);
+			listVolunteerHealthStatuses(volunteer?.id, {
+				limit: params.pageSize,
+				offset: params.page
+			})
+				.then((degrees) => {
+					console.log('Fim da requisição de graus de voluntários', degrees);
+					setHealthStatuses(degrees);
+					setLoading(false);
+				})
+				.catch((err) => {
+					console.error(err);
+					setLoading(false);
+				});
+		},
+		[volunteer?.id]
+	);
+
 	const handleRemoveVolunteerHealthStatus = useCallback(
 		(row: {
 				id: number;
@@ -84,7 +111,7 @@ export const VolunteerHealthStatus = ({
 						console.error(err);
 					});
 			},
-		[]
+		[handlePageChange]
 	);
 
 	const columns: GridColDef<(typeof vaccines.data)[number]>[] = [
@@ -122,57 +149,36 @@ export const VolunteerHealthStatus = ({
 		}
 	];
 
-	const onSubmit = useCallback((data: FieldValues) => {
-		if (!volunteer?.id) {
-			return;
-		}
-		addVolunteerHealthStatus({
-			id: data.id,
-			volunteer_id: volunteer.id,
-			health_status_id: data.health_status_id,
-			updated_at: new Date().toISOString()
-		})
-			.then(() => {
-				handlePageChange({
-					page: 0,
-					pageSize: 5
+	const onSubmit = useCallback(
+		(data: FieldValues) => {
+			if (!volunteer?.id) {
+				return;
+			}
+			addVolunteerHealthStatus({
+				id: data.id,
+				volunteer_id: volunteer.id,
+				health_status_id: data.health_status_id,
+				updated_at: new Date().toISOString()
+			})
+				.then(() => {
+					handlePageChange({
+						page: 0,
+						pageSize: 5
+					});
+				})
+				.catch((err) => {
+					console.error(err);
 				});
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	}, []);
-
-	const handlePageChange = useCallback((params: GridPaginationModel) => {
-		console.log('Início da requisição de graus de voluntários', params);
-		if (params.pageSize <= 0) {
-			return;
-		}
-		if (!volunteer?.id) {
-			return;
-		}
-		setLoading(true);
-		listVolunteerHealthStatuses(volunteer?.id, {
-			limit: params.pageSize,
-			offset: params.page
-		})
-			.then((degrees) => {
-				console.log('Fim da requisição de graus de voluntários', degrees);
-				setHealthStatuses(degrees);
-				setLoading(false);
-			})
-			.catch((err) => {
-				console.error(err);
-				setLoading(false);
-			});
-	}, []);
+		},
+		[handlePageChange, volunteer?.id]
+	);
 
 	useEffect(() => {
 		handlePageChange({
 			page: 0,
 			pageSize: 5
 		});
-	}, []);
+	}, [handlePageChange]);
 
 	return (
 		<>

@@ -78,7 +78,8 @@
 		"vaccine": "Vacina",
 		"health_status": "Status de Saúde",
 		"medicalExam": "Exame Médico",
-		"professionalBoard": "Conselho Profissional"
+		"professionalBoard": "Conselho Profissional",
+		"medicalSpecialization": "Especialização Médica"
 	},
 	"VolunteerDegree": {
 		"title": "Graduações",
@@ -118,7 +119,7 @@
 	},
 	"VolunteerMedicalSpecialization": {
 		"title": "Especializações Médicas",
-		"specialization": "Especialização",
+		"medicalSpecialization": "Especialização Médica",
 		"noRowsLabel": "Nenhuma especialização médica encontrada"
 	},
 	"VolunteerForm": {

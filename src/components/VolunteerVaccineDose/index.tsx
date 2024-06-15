@@ -75,6 +75,33 @@ export const VolunteerVaccineDose = ({
 	});
 	const { t } = useTranslation();
 
+	const handlePageChange = useCallback(
+		(params: GridPaginationModel) => {
+			console.log('Início da requisição de graus de voluntários', params);
+			if (params.pageSize <= 0) {
+				return;
+			}
+			if (!volunteer?.id) {
+				return;
+			}
+			setLoading(true);
+			listVolunteerVaccineDoses(volunteer?.id, {
+				limit: params.pageSize,
+				offset: params.page
+			})
+				.then((degrees) => {
+					console.log('Fim da requisição de graus de voluntários', degrees);
+					setVaccineDoses(degrees);
+					setLoading(false);
+				})
+				.catch((err) => {
+					console.error(err);
+					setLoading(false);
+				});
+		},
+		[volunteer?.id]
+	);
+
 	const handleRemoveVolunteerVaccineDose = useCallback(
 		(row: {
 				id: number;
@@ -95,7 +122,7 @@ export const VolunteerVaccineDose = ({
 						console.error(err);
 					});
 			},
-		[]
+		[handlePageChange]
 	);
 
 	const columns: GridColDef<(typeof vaccines.data)[number]>[] = [
@@ -141,58 +168,37 @@ export const VolunteerVaccineDose = ({
 		}
 	];
 
-	const onSubmit = useCallback((data: FieldValues) => {
-		if (!volunteer?.id) {
-			return;
-		}
-		addVolunteerVaccineDose({
-			id: data.id,
-			volunteer_id: volunteer.id,
-			vaccine_id: data.vaccine_id,
-			dose_number: data.dose_number,
-			date_administered: data.date_administered
-		})
-			.then(() => {
-				handlePageChange({
-					page: 0,
-					pageSize: 5
+	const onSubmit = useCallback(
+		(data: FieldValues) => {
+			if (!volunteer?.id) {
+				return;
+			}
+			addVolunteerVaccineDose({
+				id: data.id,
+				volunteer_id: volunteer.id,
+				vaccine_id: data.vaccine_id,
+				dose_number: data.dose_number,
+				date_administered: data.date_administered
+			})
+				.then(() => {
+					handlePageChange({
+						page: 0,
+						pageSize: 5
+					});
+				})
+				.catch((err) => {
+					console.error(err);
 				});
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	}, []);
-
-	const handlePageChange = useCallback((params: GridPaginationModel) => {
-		console.log('Início da requisição de graus de voluntários', params);
-		if (params.pageSize <= 0) {
-			return;
-		}
-		if (!volunteer?.id) {
-			return;
-		}
-		setLoading(true);
-		listVolunteerVaccineDoses(volunteer?.id, {
-			limit: params.pageSize,
-			offset: params.page
-		})
-			.then((degrees) => {
-				console.log('Fim da requisição de graus de voluntários', degrees);
-				setVaccineDoses(degrees);
-				setLoading(false);
-			})
-			.catch((err) => {
-				console.error(err);
-				setLoading(false);
-			});
-	}, []);
+		},
+		[handlePageChange, volunteer?.id]
+	);
 
 	useEffect(() => {
 		handlePageChange({
 			page: 0,
 			pageSize: 5
 		});
-	}, []);
+	}, [handlePageChange]);
 
 	return (
 		<>

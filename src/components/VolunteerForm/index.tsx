@@ -24,6 +24,7 @@ import { VolunteerDegree } from '../VolunteerDegree';
 import { VolunteerHealthStatus } from '../VolunteerHealthStatus';
 import { VolunteerLanguage } from '../VolunteerLanguage';
 import { VolunteerMedicalExam } from '../VolunteerMedicalExam';
+import { VolunteerMedicalSpecialization } from '../VolunteerMedicalSpecialization';
 import { VolunteerPostgraduateDegree } from '../VolunteerPostgraduateDegree';
 import { VolunteerProfessionalBoard } from '../VolunteerProfessionalBoard';
 import { VolunteerVaccineDose } from '../VolunteerVaccineDose';
@@ -111,7 +112,7 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 
 	useEffect(() => {
 		fetchLocationOptions('');
-	}, []);
+	}, [fetchLocationOptions]);
 
 	const navigate = useNavigate();
 
@@ -258,62 +259,74 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 					</Box>
 				</Grid>
 			</form>
-			<br />
-			<Divider />
-			<VolunteerDegree
-				volunteer={volunteer}
-				onSubmit={(e) => {
-					console.log(e);
-				}}
-			/>
-			<br />
-			<Divider />
-			<VolunteerProfessionalBoard
-				volunteer={volunteer}
-				onSubmit={(e) => {
-					console.log(e);
-				}}
-			/>
-			<br />
-			<Divider />
-			<VolunteerPostgraduateDegree
-				volunteer={volunteer}
-				onSubmit={(e) => {
-					console.log(e);
-				}}
-			/>
-			<br />
-			<Divider />
-			<VolunteerLanguage
-				volunteer={volunteer}
-				onSubmit={(e) => {
-					console.log(e);
-				}}
-			/>
-			<br />
-			<Divider />
-			<VolunteerVaccineDose
-				volunteer={volunteer}
-				onSubmit={(e) => {
-					console.log(e);
-				}}
-			/>
-			<br />
-			<Divider />
-			<VolunteerHealthStatus
-				volunteer={volunteer}
-				onSubmit={(e) => {
-					console.log(e);
-				}}
-			/>
-			<br />
-			<Divider />
-			<VolunteerMedicalExam
-				volunteer={volunteer}
-				onSubmit={(e) => {
-					console.log(e);
-				}}
-			/>
+			{volunteer?.id && (
+				<>
+					<br />
+					<Divider />
+					<VolunteerDegree
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+					<br />
+					<Divider />
+					<VolunteerProfessionalBoard
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+					<br />
+					<Divider />
+					<VolunteerPostgraduateDegree
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+					<br />
+					<Divider />
+					<VolunteerMedicalSpecialization
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+					<br />
+					<Divider />
+					<VolunteerLanguage
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+					<br />
+					<Divider />
+					<VolunteerVaccineDose
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+					<br />
+					<Divider />
+					<VolunteerHealthStatus
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+					<br />
+					<Divider />
+					<VolunteerMedicalExam
+						volunteer={volunteer}
+						onSubmit={(e) => {
+							console.log(e);
+						}}
+					/>
+				</>
+			)}
 		</>
 	);
 };

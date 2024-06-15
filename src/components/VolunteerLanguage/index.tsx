@@ -42,6 +42,33 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 	});
 	const { t } = useTranslation();
 
+	const handlePageChange = useCallback(
+		(params: GridPaginationModel) => {
+			console.log('Início da requisição de graus de voluntários', params);
+			if (params.pageSize <= 0) {
+				return;
+			}
+			if (!volunteer?.id) {
+				return;
+			}
+			setLoading(true);
+			fetchVolunteerLanguages(volunteer?.id, {
+				limit: params.pageSize,
+				offset: params.page
+			})
+				.then((degrees) => {
+					console.log('Fim da requisição de graus de voluntários', degrees);
+					setLanguages(degrees);
+					setLoading(false);
+				})
+				.catch((err) => {
+					console.error(err);
+					setLoading(false);
+				});
+		},
+		[volunteer?.id]
+	);
+
 	const handleRemoveVolunteerLanguage = useCallback(
 		(row: {
 				volunteer_id: number;
@@ -60,7 +87,7 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 						console.error(err);
 					});
 			},
-		[]
+		[handlePageChange]
 	);
 
 	const columns: GridColDef<(typeof postgraduateDegrees.data)[number]>[] = [
@@ -90,52 +117,31 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 		}
 	];
 
-	const onSubmit = useCallback((data: FieldValues) => {
-		if (!volunteer?.id) {
-			return;
-		}
-		addVolunteerLanguage(volunteer.id, data.degree.id)
-			.then(() => {
-				handlePageChange({
-					page: 0,
-					pageSize: 5
+	const onSubmit = useCallback(
+		(data: FieldValues) => {
+			if (!volunteer?.id) {
+				return;
+			}
+			addVolunteerLanguage(volunteer.id, data.language.id)
+				.then(() => {
+					handlePageChange({
+						page: 0,
+						pageSize: 5
+					});
+				})
+				.catch((err) => {
+					console.error(err);
 				});
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	}, []);
-
-	const handlePageChange = useCallback((params: GridPaginationModel) => {
-		console.log('Início da requisição de graus de voluntários', params);
-		if (params.pageSize <= 0) {
-			return;
-		}
-		if (!volunteer?.id) {
-			return;
-		}
-		setLoading(true);
-		fetchVolunteerLanguages(volunteer?.id, {
-			limit: params.pageSize,
-			offset: params.page
-		})
-			.then((degrees) => {
-				console.log('Fim da requisição de graus de voluntários', degrees);
-				setLanguages(degrees);
-				setLoading(false);
-			})
-			.catch((err) => {
-				console.error(err);
-				setLoading(false);
-			});
-	}, []);
+		},
+		[handlePageChange, volunteer?.id]
+	);
 
 	useEffect(() => {
 		handlePageChange({
 			page: 0,
 			pageSize: 5
 		});
-	}, []);
+	}, [handlePageChange]);
 
 	return (
 		<>
