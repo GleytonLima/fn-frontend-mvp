@@ -76,7 +76,8 @@
 		"postgraduateDegree": "Pós-Graduação",
 		"language": "Idioma",
 		"vaccine": "Vacina",
-		"health_status": "Status de Saúde"
+		"health_status": "Status de Saúde",
+		"medicalExam": "Exame Médico"
 	},
 	"VolunteerDegree": {
 		"title": "Graduações",
@@ -101,6 +102,12 @@
 		"status": "Status",
 		"updated_at": "Data",
 		"noRowsLabel": "Nenhum status de saúde encontrado"
+	},
+	"VolunteerMedicalExam": {
+		"title": "Exames Médicos",
+		"exam": "Exame",
+		"examDate": "Data",
+		"noRowsLabel": "Nenhum exame médico encontrado"
 	},
 	"VolunteerForm": {
 		"title": "Voluntário",

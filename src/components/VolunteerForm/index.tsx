@@ -23,6 +23,7 @@ import TextMaskCustom from '../TextMaskCustom';
 import { VolunteerDegree } from '../VolunteerDegree';
 import { VolunteerHealthStatus } from '../VolunteerHealthStatus';
 import { VolunteerLanguage } from '../VolunteerLanguage';
+import { VolunteerMedicalExam } from '../VolunteerMedicalExam';
 import { VolunteerPostgraduateDegree } from '../VolunteerPostgraduateDegree';
 import { VolunteerVaccineDose } from '../VolunteerVaccineDose';
 
@@ -291,6 +292,14 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 			<br />
 			<Divider />
 			<VolunteerHealthStatus
+				volunteer={volunteer}
+				onSubmit={(e) => {
+					console.log(e);
+				}}
+			/>
+			<br />
+			<Divider />
+			<VolunteerMedicalExam
 				volunteer={volunteer}
 				onSubmit={(e) => {
 					console.log(e);
