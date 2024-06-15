@@ -77,7 +77,8 @@
 		"language": "Idioma",
 		"vaccine": "Vacina",
 		"health_status": "Status de Saúde",
-		"medicalExam": "Exame Médico"
+		"medicalExam": "Exame Médico",
+		"professionalBoard": "Conselho Profissional"
 	},
 	"VolunteerDegree": {
 		"title": "Graduações",
@@ -108,6 +109,17 @@
 		"exam": "Exame",
 		"examDate": "Data",
 		"noRowsLabel": "Nenhum exame médico encontrado"
+	},
+	"VolunteerProfessionalBoard": {
+		"title": "Conselhos Profissionais",
+		"board": "Conselho",
+		"code": "Código",
+		"noRowsLabel": "Nenhum conselho profissional encontrado"
+	},
+	"VolunteerMedicalSpecialization": {
+		"title": "Especializações Médicas",
+		"specialization": "Especialização",
+		"noRowsLabel": "Nenhuma especialização médica encontrada"
 	},
 	"VolunteerForm": {
 		"title": "Voluntário",
