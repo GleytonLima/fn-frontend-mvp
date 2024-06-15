@@ -18,6 +18,7 @@
 		"removeGroup": "Remover Grupo",
 		"actions": "Ações",
 		"details": "Detalhes",
+		"noResults": "Nenhum resultado encontrado",
 		"pagination": {
 			"of": "de",
 			"moreThan": "mais de",
@@ -74,7 +75,16 @@
 		"degree": "Graduação"
 	},
 	"VolunteerDegree": {
-		"title": "Graduação"
+		"title": "Graduações",
+		"noRowsLabel": "Nenhuma graduação encontrada"
+	},
+	"VolunteerPostgraduateDegree": {
+		"title": "Pós-Graduações",
+		"noRowsLabel": "Nenhuma pós-graduação encontrada"
+	},
+	"VolunteerLanguage": {
+		"title": "Idiomas",
+		"noRowsLabel": "Nenhum idioma encontrado"
 	},
 	"VolunteerForm": {
 		"title": "Voluntário",

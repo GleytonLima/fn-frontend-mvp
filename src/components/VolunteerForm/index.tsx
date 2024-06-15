@@ -21,6 +21,8 @@ import { CustomLocation } from '../../models/location';
 import { listLocations } from '../../services/locations.service';
 import TextMaskCustom from '../TextMaskCustom';
 import { VolunteerDegree } from '../VolunteerDegree';
+import { VolunteerLanguage } from '../VolunteerLanguage';
+import { VolunteerPostgraduateDegree } from '../VolunteerPostgraduateDegree';
 
 const locationSchema = z.object({
 	id: z.number(),
@@ -252,8 +254,25 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 					</Box>
 				</Grid>
 			</form>
+			<br />
 			<Divider />
 			<VolunteerDegree
+				volunteer={volunteer}
+				onSubmit={(e) => {
+					console.log(e);
+				}}
+			/>
+			<br />
+			<Divider />
+			<VolunteerPostgraduateDegree
+				volunteer={volunteer}
+				onSubmit={(e) => {
+					console.log(e);
+				}}
+			/>
+			<br />
+			<Divider />
+			<VolunteerLanguage
 				volunteer={volunteer}
 				onSubmit={(e) => {
 					console.log(e);

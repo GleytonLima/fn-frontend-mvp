@@ -5,27 +5,27 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { labelDisplayedRows } from '../../models/pagination-translate';
 import {
-	addVolunteerDegree,
-	listVolunteerDegrees,
-	removeVolunteerDegree
-} from '../../services/volunteer-degree.service';
+	addVolunteerLanguage,
+	fetchVolunteerLanguages,
+	removeLanguage
+} from '../../services/volunteer-language.service';
 import BasicAutocomplete from '../BasicAutocomplete';
 import CustomNoRowsOverlay from '../CustomNoRowsOverlay';
 import { VolunteerSchema } from '../VolunteerForm';
 
-interface VolunteerDegreeProps {
+interface VolunteerLanguageProps {
 	volunteer?: VolunteerSchema;
-	onSubmit: (payload: { degree?: string }) => void;
+	onSubmit: (payload: { language?: string }) => void;
 }
 
-export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
+export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 	const [loading, setLoading] = useState(false);
 	const { handleSubmit, setValue } = useForm();
-	const [degrees, setDegrees] = useState<{
+	const [postgraduateDegrees, setLanguages] = useState<{
 		data: {
 			volunteer_id: number;
-			degree_id: number;
-			degree: { id: number; name: string };
+			language_id: number;
+			language: { id: number; name: string };
 		}[];
 		limit: number;
 		total: number;
@@ -33,8 +33,8 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 	}>({
 		data: [] as {
 			volunteer_id: number;
-			degree_id: number;
-			degree: { id: number; name: string };
+			language_id: number;
+			language: { id: number; name: string };
 		}[],
 		limit: 5,
 		total: 0,
@@ -42,14 +42,14 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 	});
 	const { t } = useTranslation();
 
-	const handleRemoveVolunteerDegree = useCallback(
+	const handleRemoveVolunteerLanguage = useCallback(
 		(row: {
 				volunteer_id: number;
-				degree_id: number;
-				degree: { id: number; name: string };
+				language_id: number;
+				language: { id: number; name: string };
 			}) =>
 			() => {
-				removeVolunteerDegree(row.volunteer_id, row.degree_id)
+				removeLanguage(row.volunteer_id, row.language_id)
 					.then(() => {
 						handlePageChange({
 							page: 0,
@@ -63,13 +63,13 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 		[]
 	);
 
-	const columns: GridColDef<(typeof degrees.data)[number]>[] = [
+	const columns: GridColDef<(typeof postgraduateDegrees.data)[number]>[] = [
 		{
 			field: 'degree',
 			headerName: t('Volunteer.name'),
 			flex: 1,
 			renderCell: (params) => {
-				return params.row.degree.name;
+				return params.row.language.name;
 			}
 		},
 		{
@@ -81,7 +81,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 					<Button
 						variant="contained"
 						color="error"
-						onClick={handleRemoveVolunteerDegree(params.row)}
+						onClick={handleRemoveVolunteerLanguage(params.row)}
 					>
 						{t('commons.remove')}
 					</Button>
@@ -94,7 +94,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 		if (!volunteer?.id) {
 			return;
 		}
-		addVolunteerDegree(volunteer.id, data.degree.id)
+		addVolunteerLanguage(volunteer.id, data.degree.id)
 			.then(() => {
 				handlePageChange({
 					page: 0,
@@ -115,13 +115,13 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 			return;
 		}
 		setLoading(true);
-		listVolunteerDegrees(volunteer?.id, {
+		fetchVolunteerLanguages(volunteer?.id, {
 			limit: params.pageSize,
 			offset: params.page
 		})
 			.then((degrees) => {
 				console.log('Fim da requisição de graus de voluntários', degrees);
-				setDegrees(degrees);
+				setLanguages(degrees);
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -141,15 +141,15 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 		<>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Typography variant="h6" component="h2" gutterBottom>
-					{t('VolunteerDegree.title')}
+					{t('VolunteerLanguage.title')}
 				</Typography>
 				<Grid container spacing={1} padding={2}>
 					<Grid item xs={9}>
 						<BasicAutocomplete
-							tableName="degree"
+							tableName="language"
 							defaultValue={null}
 							config={{
-								label: t('Volunteer.degree'),
+								label: t('Volunteer.postgraduateDegrees'),
 								placeholder: ''
 							}}
 							onChange={(field) => {
@@ -166,18 +166,18 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 				</Grid>
 				<div style={{ height: 250, width: '100%' }}>
 					<DataGrid
-						rows={degrees.data}
+						rows={postgraduateDegrees.data}
 						columns={columns}
 						loading={loading}
 						paginationMode="server"
-						rowCount={degrees.total}
-						pageSizeOptions={[1, 3, 10]}
+						rowCount={postgraduateDegrees.total}
+						pageSizeOptions={[1, 10, 50]}
 						getRowId={(row) =>
-							row.volunteer_id.toString() + row.degree_id.toString()
+							row.volunteer_id.toString() + row.language_id.toString()
 						}
 						disableRowSelectionOnClick
 						localeText={{
-							noRowsLabel: t('VolunteerDegree.noRowsLabel'),
+							noRowsLabel: t('VoluntariosTable.noRowsLabel'),
 							MuiTablePagination: {
 								labelDisplayedRows
 							}
