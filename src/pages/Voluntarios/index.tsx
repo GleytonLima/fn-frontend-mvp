@@ -1,7 +1,7 @@
 import { Box, Button, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import MainBar from '../../components/Header';
-import { VoluntariosTable } from '../../components/VoluntariosTable';
+import { VoluntariosTable } from '../../components/VolunteerTable';
 
 export const VoluntariosPage = () => {
 	const navigate = useNavigate();
@@ -19,16 +19,7 @@ export const VoluntariosPage = () => {
 								navigate('/voluntarios/create');
 							}}
 						>
-							Cadastrar Voluntário
-						</Button>
-						<Button
-							variant="contained"
-							color="secondary"
-							onClick={() => {
-								console.log('Notificar voluntários');
-							}}
-						>
-							Notificar Voluntários
+							Cadastrar
 						</Button>
 					</Box>
 				</Grid>

@@ -1,26 +1,60 @@
-import { Grid } from '@mui/material';
+import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import MainBar from '../../components/Header';
+import { VolunteerForm, VolunteerSchema } from '../../components/VolunteerForm';
 import {
-	CadastroVoluntario,
-	Voluntario
-} from '../../components/VoluntarioForm';
+	createVolunteer,
+	getVolunteerById,
+	updateVolunteer
+} from '../../services/volunteer.service';
 
 export const VoluntarioCreateEditPage = () => {
-	const handleFormSubmit = (voluntario: Voluntario) => {
-		// Aqui você pode lidar com a submissão do formulário
-		console.log(voluntario);
+	const { id } = useParams();
+	const [volunteer, setVolunteer] = useState(undefined);
+	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (id) {
+			getVolunteerById(id).then((volunteer) => {
+				setVolunteer(volunteer);
+				setLoading(false);
+			});
+		} else {
+			setVolunteer(undefined);
+			setLoading(false);
+		}
+	}, [id]);
+
+	const handleFormSubmit = (voluntario: VolunteerSchema) => {
+		console.log('VoluntarioCreateEditPage', voluntario);
+		if (id) {
+			updateVolunteer(voluntario).then(() => {
+				navigate('/voluntarios');
+			});
+			return;
+		}
+		createVolunteer(voluntario)
+			.then(() => {
+				navigate('/voluntarios');
+			})
+			.catch((error) => {
+				alert('Erro ao cadastrar voluntário');
+				console.error(error);
+			});
 	};
+
+	if (loading) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<>
 			<MainBar />
-			<Grid
-				container
-				spacing={2}
-				padding={{ xs: '1rem 1.5rem', md: '2rem 20rem', lg: '2rem 30rem' }}
-			>
-				<CadastroVoluntario onSubmit={handleFormSubmit} />
-			</Grid>
+			<Box sx={{ p: 4 }}>
+				<VolunteerForm onSubmit={handleFormSubmit} volunteer={volunteer} />
+			</Box>
 		</>
 	);
 };

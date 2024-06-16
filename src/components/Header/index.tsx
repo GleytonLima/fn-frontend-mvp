@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import TemporaryDrawer from '../MenuPrincipal';
+import TemporaryDrawer from '../MainMenu';
 
 export default function MainBar() {
 	const navigate = useNavigate();

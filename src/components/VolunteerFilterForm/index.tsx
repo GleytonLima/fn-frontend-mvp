@@ -1,7 +1,6 @@
 import { Box, Button, Grid, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { MissaoTipo } from '../../models/missao';
-import MissaoTipoDropdown from '../MissaoTipoDropdown';
+import { MissaoTipo } from '../../models/mission';
 
 type VoluntariosFilterFormProps = {
 	onSubmit: (payload: {
@@ -39,19 +38,6 @@ export const VoluntariosFilterForm = ({
 				spacing={3}
 				style={{ marginTop: '20px', marginBottom: '20px' }}
 			>
-				<Grid item xs={12} sm={6}>
-					<Controller
-						name="missaoTipo"
-						control={control}
-						render={({ field, fieldState }) => (
-							<MissaoTipoDropdown
-								fieldState={fieldState}
-								onChange={field.onChange}
-								value={field.value}
-							/>
-						)}
-					/>
-				</Grid>
 				<Grid item xs={12} sm={6}>
 					<Controller
 						name="nome"

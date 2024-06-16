@@ -4,13 +4,40 @@
 		"cancel": "Cancelar",
 		"edit": "Editar",
 		"delete": "Excluir",
+		"remove": "Remover",
 		"add": "Adicionar",
 		"close": "Fechar",
 		"search": "Pesquisar",
 		"confirm": "Confirmar",
 		"yes": "Sim",
 		"no": "Não",
-		"error": "Erro"
+		"error": "Erro",
+		"addField": "Adicionar Campo",
+		"removeField": "Remover Campo",
+		"addGroup": "Adicionar Grupo",
+		"removeGroup": "Remover Grupo",
+		"actions": "Ações",
+		"details": "Detalhes",
+		"noResults": "Nenhum resultado encontrado",
+		"pagination": {
+			"of": "de",
+			"moreThan": "mais de",
+			"rowsPerPage": "Linhas por página"
+		}
+	},
+	"BasicAutocomplete": {
+		"typeForMoreResults": "Digite para mais resultados..."
+	},
+	"FilterGroup": {
+		"language": "Idioma",
+		"degree": "Graduação",
+		"postgraduate_degree": "Pós-Graduação",
+		"medical_specialization": "Especialização Médica",
+		"label": "Valor",
+		"placeholder": "Selecione um valor",
+		"groupOperator": "Operador do Grupo",
+		"groupOperatorHint": "Selecione o tipo de grupo: E ou OU",
+		"field": "Atributo"
 	},
 	"SupplyMedicineDetails": {
 		"title": "Insumo/Medicamento"
@@ -33,6 +60,82 @@
 		"quantity": "Quantidade",
 		"status": "Status",
 		"location": "Localização"
+	},
+	"Volunteer": {
+		"name": "Nome",
+		"degrees": "Graduações",
+		"postgraduateDegrees": "Pós-Graduações",
+		"email": "E-mail",
+		"phone": "Telefone",
+		"location": "Localização",
+		"document": "Número do Documento (RG, CPF ou outro)",
+		"resumeLink": "Link do Currículo",
+		"travelAvailability": "Disponibilidade para Viagem",
+		"active": "Ativo",
+		"degree": "Graduação",
+		"postgraduateDegree": "Pós-Graduação",
+		"language": "Idioma",
+		"vaccine": "Vacina",
+		"health_status": "Status de Saúde",
+		"medicalExam": "Exame Médico",
+		"professionalBoard": "Conselho Profissional",
+		"medicalSpecialization": "Especialização Médica"
+	},
+	"VolunteerDegree": {
+		"title": "Graduações",
+		"noRowsLabel": "Nenhuma graduação encontrada"
+	},
+	"VolunteerPostgraduateDegree": {
+		"title": "Pós-Graduações",
+		"noRowsLabel": "Nenhuma pós-graduação encontrada"
+	},
+	"VolunteerLanguage": {
+		"title": "Idiomas",
+		"noRowsLabel": "Nenhum idioma encontrado"
+	},
+	"VolunteerVaccineDose": {
+		"title": "Doses de Vacina",
+		"dose_number": "Dose",
+		"date_administered": "Data de Administração",
+		"noRowsLabel": "Nenhuma dose de vacina encontrada"
+	},
+	"VolunteerHealthStatus": {
+		"title": "Status de Saúde",
+		"status": "Status",
+		"updated_at": "Data",
+		"noRowsLabel": "Nenhum status de saúde encontrado"
+	},
+	"VolunteerMedicalExam": {
+		"title": "Exames Médicos",
+		"exam": "Exame",
+		"examDate": "Data",
+		"noRowsLabel": "Nenhum exame médico encontrado"
+	},
+	"VolunteerProfessionalBoard": {
+		"title": "Conselhos Profissionais",
+		"board": "Conselho",
+		"code": "Código",
+		"noRowsLabel": "Nenhum conselho profissional encontrado"
+	},
+	"VolunteerMedicalSpecialization": {
+		"title": "Especializações Médicas",
+		"medicalSpecialization": "Especialização Médica",
+		"noRowsLabel": "Nenhuma especialização médica encontrada"
+	},
+	"VolunteerForm": {
+		"title": "Voluntário",
+		"basicData": "Dados Básicos",
+		"searchLocation": "Pesquisar Localização",
+		"invalidName": "Nome inválido",
+		"invalidEmail": "E-mail inválido",
+		"invalidPhone": "Telefone inválido",
+		"invalidLocation": "Localização inválida",
+		"invalidDocument": "Número do Documento inválido",
+		"invalidResumeLink": "Link do Currículo inválido"
+	},
+	"VoluntariosTable": {
+		"title": "Voluntários",
+		"noRowsLabel": "Nenhum voluntário encontrado"
 	},
 	"EquipmentsPage": {
 		"title": "Equipamentos"
