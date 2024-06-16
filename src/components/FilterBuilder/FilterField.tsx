@@ -79,14 +79,14 @@ const FilterField: React.FC<FilterFieldProps> = ({
 	};
 
 	const handleValueChange = (
-		event: React.SyntheticEvent<Element, Event>,
+		_event: React.SyntheticEvent<Element, Event>,
 		value: { id: number; name: string } | null
 	) => {
 		onChange({ ...field, value });
 	};
 
 	const handleInputChange = (
-		event: React.SyntheticEvent<Element, Event>,
+		_event: React.SyntheticEvent<Element, Event>,
 		newInputValue: string
 	) => {
 		setInputValue(newInputValue);

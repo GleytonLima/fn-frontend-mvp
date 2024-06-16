@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledGridOverlay = styled('div')(({ theme }) => ({
+const StyledGridOverlay = styled('div')((_) => ({
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',
