@@ -10,16 +10,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App.tsx';
 import { configureI18n } from './i18n';
 import './index.css';
-import EquipmentPage from './pages/Equipment/index.tsx';
-import EquipmentsPage from './pages/Equipments/index.tsx';
 import MissionViewPage from './pages/Mission/index.tsx';
 import { MissaoDashboardPage } from './pages/MissionDashboard/index.tsx';
 import { MissionsPage } from './pages/Missions/index.tsx';
-import SupplyMedicinePage from './pages/SupplyMedicine/index.tsx';
-import SupplyMedicinesPage from './pages/SupplyMedicines/index.tsx';
 import FilterBuilderTestPage from './pages/Test/index.tsx';
-import { VoluntarioCreateEditPage } from './pages/VoluntarioCreateEdit/index.tsx';
-import { VoluntariosPage } from './pages/Voluntarios/index.tsx';
+import { VoluntarioCreateEditPage } from './pages/VolunteerCreateEdit/index.tsx';
+import { VoluntariosPage } from './pages/Volunteers/index.tsx';
 
 configureI18n();
 
@@ -34,16 +30,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				></Route>
 				<Route path="/missions/:id/view" element={<MissionViewPage />}></Route>
 				<Route path="/missions" element={<MissionsPage />}></Route>
-				<Route
-					path="/supplies-medicines"
-					element={<SupplyMedicinesPage />}
-				></Route>
-				<Route
-					path="/supplies-medicines/:id/view"
-					element={<SupplyMedicinePage />}
-				></Route>
-				<Route path="/equipments" element={<EquipmentsPage />}></Route>
-				<Route path="/equipments/:id/view" element={<EquipmentPage />} />
 				<Route
 					path="/voluntarios/create"
 					element={<VoluntarioCreateEditPage />}

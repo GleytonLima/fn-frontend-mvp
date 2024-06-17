@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from '@mui/material';
 import * as React from 'react';
-import MainBar from '../../components/Header';
-import MissionConfigCard from '../../components/MissionConfigCard';
+import MainBar from '../../components/Commons/Header';
+import MissionConfigCard from '../../components/Missions/MissionConfigCard';
 
 const MissionViewPage: React.FC = () => {
 	const configs = [

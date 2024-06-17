@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
-import MainBar from '../../components/Header';
-import MissaoDashboard from '../../components/dashboard/MissaoDashboard';
+import MainBar from '../../components/Commons/Header';
+import MissaoDashboard from '../../components/Dashboard/MissaoDashboard';
 
 export const MissaoDashboardPage = () => {
 	return (

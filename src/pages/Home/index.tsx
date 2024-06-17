@@ -12,7 +12,7 @@ import {
 	Typography
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import MainBar from '../../components/Header';
+import MainBar from '../../components/Commons/Header';
 
 const HomePage = () => {
 	const navigate = useNavigate();

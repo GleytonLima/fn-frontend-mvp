@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
-import MainBar from '../../components/Header';
-import MissionsTable from '../../components/MissionsTable';
+import MainBar from '../../components/Commons/Header';
+import MissionsTable from '../../components/Missions/MissionsTable';
 
 export const MissionsPage = () => {
 	const missions = [
