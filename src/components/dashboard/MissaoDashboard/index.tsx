@@ -25,7 +25,7 @@ import TotalVolunteers from '../TotalVolunteers';
 import VolunteersBySpecialty from '../VolunteersBySpecialty';
 import VulnerablePopulationMonitor from '../VulnerablePopulationMonitor';
 
-const MissaoDashboardComponent: React.FC = () => {
+const MissaoDashboard: React.FC = () => {
 	const [dashboard, setDashboard] = React.useState(
 		'Missão 05/2024 - Rio Grande do Sul'
 	);
@@ -145,4 +145,4 @@ const MissaoDashboardComponent: React.FC = () => {
 	);
 };
 
-export default MissaoDashboardComponent;
+export default MissaoDashboard;
