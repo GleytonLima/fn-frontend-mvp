@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useCallback, useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import { ptBR } from '@mui/x-date-pickers/locales';
 import {
 	addVolunteerVaccineDose,
@@ -154,13 +155,9 @@ export const VolunteerVaccineDose = ({
 			width: 150,
 			renderCell: (params) => {
 				return (
-					<Button
-						variant="contained"
-						color="error"
-						onClick={handleRemoveVolunteerVaccineDose(params.row)}
-					>
-						{t('commons.remove')}
-					</Button>
+					<IconButton onClick={handleRemoveVolunteerVaccineDose(params.row)}>
+						<DeleteIcon />
+					</IconButton>
 				);
 			}
 		}
@@ -205,8 +202,8 @@ export const VolunteerVaccineDose = ({
 				<Typography variant="h6" component="h2" gutterBottom>
 					{t('VolunteerVaccineDose.title')}
 				</Typography>
-				<Grid container spacing={1} padding={2}>
-					<Grid item xs={9}>
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
+					<Grid item xs={4}>
 						<BasicAutocomplete
 							tableName="vaccine"
 							defaultValue={null}
@@ -221,16 +218,17 @@ export const VolunteerVaccineDose = ({
 							}}
 						/>
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={2}>
 						<TextField
 							{...register('dose_number')}
+							size="small"
 							type="number"
 							label={t('VolunteerVaccineDose.dose_number')}
 							error={!!errors.dose_number}
 							helperText={errors.dose_number?.message}
 						/>
 					</Grid>
-					<Grid item xs={9}>
+					<Grid item xs={3}>
 						<DatePicker
 							label={t('VolunteerVaccineDose.date_administered')}
 							onError={(error) => {
@@ -243,9 +241,10 @@ export const VolunteerVaccineDose = ({
 							localeText={
 								ptBR.components.MuiLocalizationProvider.defaultProps.localeText
 							}
+							slotProps={{ textField: { size: 'small' } }}
 						/>
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={2}>
 						<Button type="submit" variant="contained" color="primary">
 							{t('commons.add')}
 						</Button>

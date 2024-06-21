@@ -1,4 +1,5 @@
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -121,13 +122,11 @@ export const VolunteerProfessionalBoard = ({
 			width: 150,
 			renderCell: (params) => {
 				return (
-					<Button
-						variant="contained"
-						color="error"
+					<IconButton
 						onClick={handleRemoveVolunteerProfessionalBoard(params.row)}
 					>
-						{t('commons.remove')}
-					</Button>
+						<DeleteIcon />
+					</IconButton>
 				);
 			}
 		}
@@ -169,8 +168,8 @@ export const VolunteerProfessionalBoard = ({
 				<Typography variant="h6" component="h2" gutterBottom>
 					{t('VolunteerProfessionalBoard.title')}
 				</Typography>
-				<Grid container spacing={1} padding={2}>
-					<Grid item xs={8}>
+				<Grid container spacing={1} paddingTop={2} paddingBlock={2}>
+					<Grid item xs={6}>
 						<BasicAutocomplete
 							tableName="professional_board"
 							defaultValue={null}
@@ -185,9 +184,10 @@ export const VolunteerProfessionalBoard = ({
 						/>
 					</Grid>
 
-					<Grid item xs={4}>
+					<Grid item xs={3}>
 						<TextField
 							{...register('code')}
+							size="small"
 							type="text"
 							label={t('VolunteerProfessionalBoard.code')}
 							error={!!errors.code}

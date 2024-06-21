@@ -1,4 +1,5 @@
-import { Button, Grid, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Button, Grid, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -103,13 +104,9 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 			width: 150,
 			renderCell: (params) => {
 				return (
-					<Button
-						variant="contained"
-						color="error"
-						onClick={handleRemoveVolunteerDegree(params.row)}
-					>
-						{t('commons.remove')}
-					</Button>
+					<IconButton onClick={handleRemoveVolunteerDegree(params.row)}>
+						<DeleteIcon />
+					</IconButton>
 				);
 			}
 		}
@@ -147,7 +144,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 				<Typography variant="h6" component="h2" gutterBottom>
 					{t('VolunteerDegree.title')}
 				</Typography>
-				<Grid container spacing={1} padding={2}>
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={9}>
 						<BasicAutocomplete
 							tableName="degree"

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useCallback, useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import { ptBR } from '@mui/x-date-pickers/locales';
 import {
 	addVolunteerMedicalExam,
@@ -136,13 +137,9 @@ export const VolunteerMedicalExam = ({
 			width: 150,
 			renderCell: (params) => {
 				return (
-					<Button
-						variant="contained"
-						color="error"
-						onClick={handleRemoveVolunteerMedicalExam(params.row)}
-					>
-						{t('commons.remove')}
-					</Button>
+					<IconButton onClick={handleRemoveVolunteerMedicalExam(params.row)}>
+						<DeleteIcon />
+					</IconButton>
 				);
 			}
 		}
@@ -186,8 +183,8 @@ export const VolunteerMedicalExam = ({
 				<Typography variant="h6" component="h2" gutterBottom>
 					{t('VolunteerMedicalExam.title')}
 				</Typography>
-				<Grid container spacing={1} padding={2}>
-					<Grid item xs={9}>
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
+					<Grid item xs={6}>
 						<BasicAutocomplete
 							tableName="medical_exam"
 							defaultValue={null}
@@ -202,7 +199,7 @@ export const VolunteerMedicalExam = ({
 							}}
 						/>
 					</Grid>
-					<Grid item xs={9}>
+					<Grid item xs={3}>
 						<DatePicker
 							label={t('VolunteerMedicalExam.examDate')}
 							onError={(error) => {
@@ -215,6 +212,7 @@ export const VolunteerMedicalExam = ({
 							localeText={
 								ptBR.components.MuiLocalizationProvider.defaultProps.localeText
 							}
+							slotProps={{ textField: { size: 'small' } }}
 						/>
 					</Grid>
 					<Grid item xs={3}>

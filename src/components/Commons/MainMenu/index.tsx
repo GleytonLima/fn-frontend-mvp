@@ -2,7 +2,10 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import SchoolIcon from '@mui/icons-material/School';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import { Collapse, Toolbar, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -30,6 +33,7 @@ export default function TemporaryDrawer({
 	const [openRecursos, setOpenRecursos] = useState(false);
 	const [openComunicacao, setOpenComunicacao] = useState(false);
 	const [openMissoes, setOpenMissoes] = useState(false);
+	const [openBasicTables, setOpenBasicTables] = useState(false);
 
 	const handleClick = (menu: string) => {
 		switch (menu) {
@@ -47,6 +51,9 @@ export default function TemporaryDrawer({
 				break;
 			case 'missoes':
 				setOpenMissoes(!openMissoes);
+				break;
+			case 'basic-tables':
+				setOpenBasicTables(!openBasicTables);
 				break;
 			default:
 				break;
@@ -105,6 +112,41 @@ export default function TemporaryDrawer({
 								<VolunteerActivismIcon />
 							</ListItemIcon>
 							<ListItemText primary="Cadastro de Voluntários" />
+						</ListItemButton>
+					</List>
+				</Collapse>
+				<ListItemButton onClick={() => handleClick('basic-tables')}>
+					<ListItemIcon>
+						<TableChartIcon />
+					</ListItemIcon>
+					<ListItemText primary="Tabelas Básicas" />
+					{openBasicTables ? <ExpandLess /> : <ExpandMore />}
+				</ListItemButton>
+				<Collapse in={openBasicTables} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=degree"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<SchoolIcon />
+							</ListItemIcon>
+							<ListItemText primary="Graduações" />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=postgraduate_degree"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<EngineeringIcon />
+							</ListItemIcon>
+							<ListItemText primary="Pós-graduações" />
 						</ListItemButton>
 					</List>
 				</Collapse>

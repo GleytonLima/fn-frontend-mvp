@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App.tsx';
 import { configureI18n } from './i18n';
 import './index.css';
+import { BasicTablesPage } from './pages/BasicTables/index.tsx';
 import MissionViewPage from './pages/Mission/index.tsx';
 import { MissaoDashboardPage } from './pages/MissionDashboard/index.tsx';
 import { MissionsPage } from './pages/Missions/index.tsx';
@@ -40,6 +41,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				></Route>
 				<Route path="/teste" element={<FilterBuilderTestPage />}></Route>
 				<Route path="/voluntarios" element={<VoluntariosPage />}></Route>
+				<Route path="/basic-tables" element={<BasicTablesPage />}></Route>
 			</Routes>
 		</BrowserRouter>
 	</LocalizationProvider>
