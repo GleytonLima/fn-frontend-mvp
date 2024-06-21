@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
 	addVolunteerHealthStatus,
 	listVolunteerHealthStatuses,
@@ -135,13 +136,9 @@ export const VolunteerHealthStatus = ({
 			width: 150,
 			renderCell: (params) => {
 				return (
-					<Button
-						variant="contained"
-						color="error"
-						onClick={handleRemoveVolunteerHealthStatus(params.row)}
-					>
-						{t('commons.remove')}
-					</Button>
+					<IconButton onClick={handleRemoveVolunteerHealthStatus(params.row)}>
+						<DeleteIcon />
+					</IconButton>
 				);
 			}
 		}
@@ -185,7 +182,7 @@ export const VolunteerHealthStatus = ({
 				<Typography variant="h6" component="h2" gutterBottom>
 					{t('VolunteerHealthStatus.title')}
 				</Typography>
-				<Grid container spacing={1} padding={2}>
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={9}>
 						<BasicAutocomplete
 							tableName="health_status"

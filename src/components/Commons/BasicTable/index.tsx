@@ -1,33 +1,23 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {
-	Box,
-	Button,
-	Grid,
-	IconButton,
-	Menu,
-	MenuItem,
-	TextField,
-	Typography
-} from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MouseEvent, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import { listBasicTableWithPagination } from '../../../services/basic-tables.service';
+import { BasicTableFilterForm } from '../BasicTableFilterForm';
 
 export const BasicTableComponent = () => {
 	const [loading, setLoading] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [searchParams, setSearchParams] = useSearchParams();
-	const { handleSubmit, register } = useForm();
+	const [searchParams] = useSearchParams();
 	const open = Boolean(anchorEl);
 	const { t } = useTranslation();
 
 	const tableName = searchParams.get('tableName') || '';
-	const name = searchParams.get('name') || '';
+	const nameFilter = searchParams.get('name') || '';
 
 	const navigate = useNavigate();
 	const handleEdit = (id: number) => {
@@ -54,15 +44,11 @@ export const BasicTableComponent = () => {
 		offset: 0
 	});
 
-	const handlePageChange = (params: {
-		page: number;
-		pageSize: number;
-		nameFilter?: string;
-	}) => {
+	const handlePageChange = (params: { page: number; pageSize: number }) => {
 		setLoading(true);
 		listBasicTableWithPagination({
 			tableName,
-			name: params.nameFilter || '',
+			name: nameFilter || '',
 			limit: params.pageSize,
 			offset: params.page
 		}).then((results) => {
@@ -75,7 +61,7 @@ export const BasicTableComponent = () => {
 			page: 0,
 			pageSize: 5
 		});
-	}, [tableName]);
+	}, [tableName, nameFilter]);
 
 	const columns: GridColDef<(typeof results.data)[number]>[] = [
 		{
@@ -114,19 +100,6 @@ export const BasicTableComponent = () => {
 		}
 	];
 
-	const onSubmit = (data) => {
-		console.log(data);
-		setSearchParams({
-			tableName,
-			name: data.name
-		});
-		handlePageChange({
-			nameFilter: data.name,
-			page: 0,
-			pageSize: 5
-		});
-	};
-
 	return (
 		<>
 			<Box sx={{ p: 4 }}>
@@ -134,24 +107,7 @@ export const BasicTableComponent = () => {
 					<Typography variant="h5" component="h2">
 						{t(`BasicTable.${tableName}`)}
 					</Typography>
-					<form onSubmit={handleSubmit(onSubmit)}>
-						<Grid container spacing={1} padding={2}>
-							<Grid item xs={9}>
-								<TextField
-									{...register('name')}
-									margin="dense"
-									label="Nome filtro"
-									fullWidth
-									variant="standard"
-								/>
-							</Grid>
-							<Grid item xs={3}>
-								<Button variant="contained" color="primary" type="submit">
-									{t('commons.search')}
-								</Button>
-							</Grid>
-						</Grid>
-					</form>
+					<BasicTableFilterForm />
 					<DataGrid
 						rows={results.data}
 						columns={columns}

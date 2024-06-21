@@ -89,6 +89,7 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 					renderInput={(params) => (
 						<TextField
 							{...params}
+							size="small"
 							ref={params.InputProps.ref}
 							label={config.label}
 							placeholder={config.placeholder}

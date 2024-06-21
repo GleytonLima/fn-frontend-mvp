@@ -2,7 +2,10 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import SchoolIcon from '@mui/icons-material/School';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import { Collapse, Toolbar, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -114,7 +117,7 @@ export default function TemporaryDrawer({
 				</Collapse>
 				<ListItemButton onClick={() => handleClick('basic-tables')}>
 					<ListItemIcon>
-						<BusinessCenterIcon />
+						<TableChartIcon />
 					</ListItemIcon>
 					<ListItemText primary="Tabelas Básicas" />
 					{openBasicTables ? <ExpandLess /> : <ExpandMore />}
@@ -128,7 +131,7 @@ export default function TemporaryDrawer({
 							onClick={toggleDrawer(false)}
 						>
 							<ListItemIcon>
-								<VolunteerActivismIcon />
+								<SchoolIcon />
 							</ListItemIcon>
 							<ListItemText primary="Graduações" />
 						</ListItemButton>
@@ -141,7 +144,7 @@ export default function TemporaryDrawer({
 							onClick={toggleDrawer(false)}
 						>
 							<ListItemIcon>
-								<VolunteerActivismIcon />
+								<EngineeringIcon />
 							</ListItemIcon>
 							<ListItemText primary="Pós-graduações" />
 						</ListItemButton>

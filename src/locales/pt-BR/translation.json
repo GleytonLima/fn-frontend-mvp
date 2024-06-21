@@ -96,7 +96,7 @@
 	"VolunteerVaccineDose": {
 		"title": "Doses de Vacina",
 		"dose_number": "Dose",
-		"date_administered": "Data de Administração",
+		"date_administered": "Data",
 		"noRowsLabel": "Nenhuma dose de vacina encontrada"
 	},
 	"VolunteerHealthStatus": {
@@ -144,5 +144,8 @@
 		"degree": "Graduação",
 		"postgraduate_degree": "Pós-Graduação",
 		"noRowsLabel": "Nenhum registro encontrado"
+	},
+	"BasicTableFilterForm": {
+		"name": "Nome"
 	}
 }
