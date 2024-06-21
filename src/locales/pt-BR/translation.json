@@ -139,5 +139,10 @@
 	},
 	"EquipmentsPage": {
 		"title": "Equipamentos"
+	},
+	"BasicTable": {
+		"degree": "Graduação",
+		"postgraduate_degree": "Pós-Graduação",
+		"noRowsLabel": "Nenhum registro encontrado"
 	}
 }

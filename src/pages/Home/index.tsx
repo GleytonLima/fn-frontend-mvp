@@ -53,6 +53,8 @@ const HomePage = () => {
 						<br />
 						<Typography>
 							Exemplos de Situações Elegíveis para atuação da FN-SUS:
+						</Typography>
+						<Typography component="div">
 							<ul>
 								<li>Eventos de massa: Jogos Olímpicos, Copa do Mundo, etc.</li>
 								<li>

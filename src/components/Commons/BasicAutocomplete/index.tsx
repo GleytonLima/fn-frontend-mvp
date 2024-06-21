@@ -4,7 +4,7 @@ import {
 	TextField,
 	debounce
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BasicTable } from '../../../models/basic-table';
 import { listBasicTable } from '../../../services/basic-tables.service';
@@ -16,6 +16,8 @@ interface BasicAutocompleteProps {
 	onChange: (field: BasicTable | BasicTable[] | null) => void;
 }
 
+const DEBOUNCE_DELAY = 500;
+
 const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 	(props, ref) => {
 		const { tableName, defaultValue, config, onChange } = props;
@@ -25,11 +27,13 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 		const [error, setError] = useState(false);
 		const { t } = useTranslation();
 
-		const DEBOUNCE_DELAY = 500;
-		const DEFAULT_OPTION = {
-			id: -1,
-			name: t('BasicAutocomplete.typeForMoreResults')
-		};
+		const DEFAULT_OPTION = useMemo(
+			() => ({
+				id: -1,
+				name: t('BasicAutocomplete.typeForMoreResults')
+			}),
+			[t]
+		);
 
 		const fetchOptions = useCallback(
 			async (newValue: string) => {
@@ -50,7 +54,7 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 					setLoading(false);
 				}
 			},
-			[tableName]
+			[tableName, DEFAULT_OPTION]
 		);
 
 		const debouncedFetchOptions = useCallback(

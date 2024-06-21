@@ -15,12 +15,39 @@ export const listBasicTable = async (params: {
 		const queryParams = new URLSearchParams();
 		queryParams.append('table_name', tableName);
 		queryParams.append('limit', `${limit}`);
-		queryParams.append('offset', `${offset}`);
+		queryParams.append('offset', `${offset * limit}`);
 		if (name && name.length > 0) {
 			queryParams.append('name', name);
 		}
 		const response = await api.get(`/basic-tables?${queryParams}`);
 		return response.data.data as { id: number; name: string }[];
+	} catch (error) {
+		console.error(error);
+		return Promise.reject(error);
+	}
+};
+
+export const listBasicTableWithPagination = async (params: {
+	tableName: string;
+	name: string;
+	limit: number;
+	offset: number;
+}) => {
+	try {
+		const { tableName, name, limit, offset } = params;
+		if (!tableName) {
+			// empty values
+			return [];
+		}
+		const queryParams = new URLSearchParams();
+		queryParams.append('table_name', tableName);
+		queryParams.append('limit', `${limit}`);
+		queryParams.append('offset', `${offset * limit}`);
+		if (name && name.length > 0) {
+			queryParams.append('name', name);
+		}
+		const response = await api.get(`/basic-tables?${queryParams}`);
+		return response.data;
 	} catch (error) {
 		console.error(error);
 		return Promise.reject(error);

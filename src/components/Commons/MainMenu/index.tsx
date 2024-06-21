@@ -30,6 +30,7 @@ export default function TemporaryDrawer({
 	const [openRecursos, setOpenRecursos] = useState(false);
 	const [openComunicacao, setOpenComunicacao] = useState(false);
 	const [openMissoes, setOpenMissoes] = useState(false);
+	const [openBasicTables, setOpenBasicTables] = useState(false);
 
 	const handleClick = (menu: string) => {
 		switch (menu) {
@@ -47,6 +48,9 @@ export default function TemporaryDrawer({
 				break;
 			case 'missoes':
 				setOpenMissoes(!openMissoes);
+				break;
+			case 'basic-tables':
+				setOpenBasicTables(!openBasicTables);
 				break;
 			default:
 				break;
@@ -105,6 +109,41 @@ export default function TemporaryDrawer({
 								<VolunteerActivismIcon />
 							</ListItemIcon>
 							<ListItemText primary="Cadastro de Voluntários" />
+						</ListItemButton>
+					</List>
+				</Collapse>
+				<ListItemButton onClick={() => handleClick('basic-tables')}>
+					<ListItemIcon>
+						<BusinessCenterIcon />
+					</ListItemIcon>
+					<ListItemText primary="Tabelas Básicas" />
+					{openBasicTables ? <ExpandLess /> : <ExpandMore />}
+				</ListItemButton>
+				<Collapse in={openBasicTables} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=degree"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<VolunteerActivismIcon />
+							</ListItemIcon>
+							<ListItemText primary="Graduações" />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=postgraduate_degree"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<VolunteerActivismIcon />
+							</ListItemIcon>
+							<ListItemText primary="Pós-graduações" />
 						</ListItemButton>
 					</List>
 				</Collapse>
