@@ -1,9 +1,18 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, Grid, IconButton, Typography } from '@mui/material';
+import { zodResolver } from '@hookform/resolvers/zod';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {
+	Button,
+	Grid,
+	IconButton,
+	Menu,
+	MenuItem,
+	Typography
+} from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import {
 	addVolunteerPostgraduateDegree,
@@ -14,6 +23,18 @@ import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
 import { VolunteerSchema } from '../VolunteerForm';
 
+const postdegreeSchema = z.object({
+	id: z.number(),
+	name: z.string()
+});
+const volunteerPostdegreeSchema = z.object({
+	postgraduateDegree: postdegreeSchema
+});
+
+export type VolunteerPostdegreeSchema = z.infer<
+	typeof volunteerPostdegreeSchema
+>;
+
 interface VolunteerPostgraduateDegreeProps {
 	volunteer?: VolunteerSchema;
 	onSubmit: (payload: { postgraduate_degree?: string }) => void;
@@ -23,7 +44,19 @@ export const VolunteerPostgraduateDegree = ({
 	volunteer
 }: VolunteerPostgraduateDegreeProps) => {
 	const [loading, setLoading] = useState(false);
-	const { handleSubmit, setValue } = useForm();
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const {
+		control,
+		reset,
+		handleSubmit,
+		formState: { isValid }
+	} = useForm<VolunteerPostdegreeSchema>({
+		resolver: zodResolver(volunteerPostdegreeSchema),
+		defaultValues: {
+			postgraduateDegree: undefined
+		}
+	});
 	const [postgraduateDegrees, setPostgraduateDegrees] = useState<{
 		data: {
 			volunteer_id: number;
@@ -77,6 +110,7 @@ export const VolunteerPostgraduateDegree = ({
 				postgraduate_degree: { id: number; name: string };
 			}) =>
 			() => {
+				setAnchorEl(null);
 				removePostgraduateDegree(row.volunteer_id, row.postgraduate_degree_id)
 					.then(() => {
 						handlePageChange({
@@ -103,14 +137,34 @@ export const VolunteerPostgraduateDegree = ({
 		{
 			field: 'actions',
 			headerName: t('commons.actions'),
-			width: 150,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
-					<IconButton
-						onClick={handleRemoveVolunteerPostgraduateDegree(params.row)}
-					>
-						<DeleteIcon />
-					</IconButton>
+					<>
+						<IconButton
+							aria-label="more"
+							aria-controls="long-menu"
+							aria-haspopup="true"
+							onClick={(event) => {
+								event.stopPropagation();
+								setAnchorEl(event.currentTarget);
+							}}
+						>
+							<MoreVertIcon />
+						</IconButton>
+						<Menu
+							id="long-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={() => setAnchorEl(null)}
+						>
+							<MenuItem
+								onClick={handleRemoveVolunteerPostgraduateDegree(params.row)}
+							>
+								{t('commons.delete')}
+							</MenuItem>
+						</Menu>
+					</>
 				);
 			}
 		}
@@ -121,8 +175,9 @@ export const VolunteerPostgraduateDegree = ({
 			if (!volunteer?.id) {
 				return;
 			}
-			addVolunteerPostgraduateDegree(volunteer.id, data.postgraduate_degree.id)
+			addVolunteerPostgraduateDegree(volunteer.id, data.postgraduateDegree.id)
 				.then(() => {
+					reset();
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -132,7 +187,7 @@ export const VolunteerPostgraduateDegree = ({
 					console.error(err);
 				});
 		},
-		[handlePageChange, volunteer?.id]
+		[handlePageChange, volunteer?.id, reset]
 	);
 
 	useEffect(() => {
@@ -144,61 +199,71 @@ export const VolunteerPostgraduateDegree = ({
 
 	return (
 		<>
+			<Typography variant="h6" component="h2" gutterBottom>
+				{t('VolunteerPostgraduateDegree.title')}
+			</Typography>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Typography variant="h6" component="h2" gutterBottom>
-					{t('VolunteerPostgraduateDegree.title')}
-				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
-					<Grid item xs={9}>
-						<BasicAutocomplete
-							tableName="postgraduate_degree"
-							defaultValue={null}
-							config={{
-								label: t('Volunteer.postgraduateDegree'),
-								placeholder: ''
-							}}
-							onChange={(field) => {
-								console.log(field);
-								setValue('postgraduate_degree', field);
-							}}
+					<Grid item xs={8}>
+						<Controller
+							name="postgraduateDegree"
+							control={control}
+							render={({ field }) => (
+								<BasicAutocomplete
+									tableName="postgraduate_degree"
+									value={field.value ?? null}
+									config={{
+										label: t('Volunteer.postgraduateDegree'),
+										placeholder: ''
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<Button type="submit" variant="contained" color="primary">
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							disabled={!isValid}
+						>
 							{t('commons.add')}
 						</Button>
 					</Grid>
 				</Grid>
-				<div style={{ height: 250, width: '100%' }}>
-					<DataGrid
-						rows={postgraduateDegrees.data}
-						columns={columns}
-						loading={loading}
-						paginationMode="server"
-						rowCount={postgraduateDegrees.total}
-						pageSizeOptions={[1, 10, 50]}
-						getRowId={(row) =>
-							row.volunteer_id.toString() +
-							row.postgraduate_degree_id.toString()
-						}
-						disableRowSelectionOnClick
-						localeText={{
-							noRowsLabel: t('VoluntariosTable.noRowsLabel'),
-							MuiTablePagination: {
-								labelDisplayedRows
-							}
-						}}
-						onPaginationModelChange={(params) => {
-							handlePageChange({
-								page: params.page,
-								pageSize: params.pageSize
-							});
-						}}
-						slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-						sx={{ '--DataGrid-overlayHeight': '300px' }}
-					/>
-				</div>
 			</form>
+			<div style={{ height: 250 }}>
+				<DataGrid
+					rows={postgraduateDegrees.data}
+					columns={columns}
+					disableColumnMenu={true}
+					loading={loading}
+					paginationMode="server"
+					rowCount={postgraduateDegrees.total}
+					pageSizeOptions={[1, 10, 50]}
+					getRowId={(row) =>
+						row.volunteer_id.toString() + row.postgraduate_degree_id.toString()
+					}
+					disableRowSelectionOnClick
+					localeText={{
+						noRowsLabel: t('VoluntariosTable.noRowsLabel'),
+						MuiTablePagination: {
+							labelDisplayedRows
+						}
+					}}
+					onPaginationModelChange={(params) => {
+						handlePageChange({
+							page: params.page,
+							pageSize: params.pageSize
+						});
+					}}
+					slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+					sx={{ '--DataGrid-overlayHeight': '300px' }}
+				/>
+			</div>
 		</>
 	);
 };

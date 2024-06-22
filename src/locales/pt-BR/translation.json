@@ -95,6 +95,7 @@
 	},
 	"VolunteerVaccineDose": {
 		"title": "Doses de Vacina",
+		"vaccine": "Vacina",
 		"dose_number": "Dose",
 		"date_administered": "Data",
 		"noRowsLabel": "Nenhuma dose de vacina encontrada"

@@ -11,9 +11,10 @@ import { listBasicTable } from '../../../services/basic-tables.service';
 
 interface BasicAutocompleteProps {
 	tableName: string;
+	value?: BasicTable | null;
 	defaultValue?: BasicTable | null;
 	config: { label: string; placeholder: string };
-	onChange: (field: BasicTable | BasicTable[] | null) => void;
+	onChange: (field: BasicTable | null) => void;
 }
 
 const DEBOUNCE_DELAY = 500;
@@ -73,6 +74,7 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 					fullWidth
 					id="value-select"
 					options={options}
+					value={props.value}
 					defaultValue={defaultValue}
 					onChange={(_, newValue) => {
 						onChange(newValue);
