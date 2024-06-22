@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
 	Button,
@@ -10,8 +11,9 @@ import {
 } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 import useWindowDimensions from '../../../hooks/window-dimensions';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import {
@@ -22,6 +24,20 @@ import {
 import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
 import { VolunteerSchema } from '../VolunteerForm';
+
+const professionalBoardSchema = z.object({
+	id: z.number(),
+	name: z.string()
+});
+
+const volunteerProfessionalBoardSchema = z.object({
+	professionalBoard: professionalBoardSchema,
+	code: z.string().min(1)
+});
+
+export type VolunteerProfessionalBoardSchema = z.infer<
+	typeof volunteerProfessionalBoardSchema
+>;
 
 interface VolunteerProfessionalBoardProps {
 	volunteer?: VolunteerSchema;
@@ -36,11 +52,17 @@ export const VolunteerProfessionalBoard = ({
 	const open = Boolean(anchorEl);
 	const { width } = useWindowDimensions();
 	const {
-		handleSubmit,
+		control,
+		reset,
 		register,
-		setValue,
-		formState: { errors }
-	} = useForm();
+		handleSubmit,
+		formState: { isValid, errors }
+	} = useForm<VolunteerProfessionalBoardSchema>({
+		resolver: zodResolver(volunteerProfessionalBoardSchema),
+		defaultValues: {
+			professionalBoard: undefined
+		}
+	});
 	const [professionalBoards, setProfessionalBoards] = useState<{
 		data: {
 			volunteer_id: number;
@@ -97,6 +119,7 @@ export const VolunteerProfessionalBoard = ({
 				professional_board: { id: number; name: string };
 			}) =>
 			() => {
+				setAnchorEl(null);
 				removeProfessionalBoard(row.volunteer_id, row.professional_board_id)
 					.then(() => {
 						handlePageChange({
@@ -131,7 +154,7 @@ export const VolunteerProfessionalBoard = ({
 		{
 			field: 'actions',
 			headerName: t('commons.actions'),
-			flex: 0.45,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
 					<>
@@ -171,10 +194,11 @@ export const VolunteerProfessionalBoard = ({
 			}
 			addVolunteerProfessionalBoard(
 				volunteer.id,
-				data.professional_board.id,
+				data.professionalBoard.id,
 				data.code
 			)
 				.then(() => {
+					reset();
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -184,7 +208,7 @@ export const VolunteerProfessionalBoard = ({
 					console.error(err);
 				});
 		},
-		[handlePageChange, volunteer?.id]
+		[handlePageChange, volunteer?.id, reset]
 	);
 
 	useEffect(() => {
@@ -202,17 +226,22 @@ export const VolunteerProfessionalBoard = ({
 				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBlock={2}>
 					<Grid item xs={6}>
-						<BasicAutocomplete
-							tableName="professional_board"
-							defaultValue={null}
-							config={{
-								label: t('Volunteer.professionalBoard'),
-								placeholder: ''
-							}}
-							onChange={(field) => {
-								console.log(field);
-								setValue('professional_board', field);
-							}}
+						<Controller
+							name="professionalBoard"
+							control={control}
+							render={({ field }) => (
+								<BasicAutocomplete
+									tableName="professional_board"
+									value={field.value ?? null}
+									config={{
+										label: t('Volunteer.professionalBoard'),
+										placeholder: ''
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 
@@ -226,7 +255,12 @@ export const VolunteerProfessionalBoard = ({
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<Button type="submit" variant="contained" color="primary">
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							disabled={!isValid}
+						>
 							{t('commons.add')}
 						</Button>
 					</Grid>
@@ -235,6 +269,7 @@ export const VolunteerProfessionalBoard = ({
 					<DataGrid
 						rows={professionalBoards.data}
 						columns={columns}
+						disableColumnMenu={true}
 						columnVisibilityModel={{
 							professional_board: true,
 							code: width > 600 ? true : false,

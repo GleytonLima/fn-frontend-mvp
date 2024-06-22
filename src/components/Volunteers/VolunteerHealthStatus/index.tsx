@@ -1,14 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, IconButton, Typography } from '@mui/material';
+import {
+	Button,
+	Grid,
+	IconButton,
+	Menu,
+	MenuItem,
+	Typography
+} from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
 	addVolunteerHealthStatus,
 	listVolunteerHealthStatuses,
@@ -19,13 +25,20 @@ import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const healthStatusSchema = z.object({
+	id: z.number(),
+	name: z.string()
+});
+
+const volunteerHealthStatusSchema = z.object({
 	id: z.number().optional(),
 	volunteer_id: z.number().optional(),
-	health_status_id: z.number().optional(),
+	healthStatus: healthStatusSchema,
 	updated_at: z.string().optional()
 });
 
-export type HealthStatusSchema = z.infer<typeof healthStatusSchema>;
+export type VolunteerHealthStatusSchema = z.infer<
+	typeof volunteerHealthStatusSchema
+>;
 
 interface VolunteerHealthStatusProps {
 	volunteer?: VolunteerSchema;
@@ -36,8 +49,16 @@ export const VolunteerHealthStatus = ({
 	volunteer
 }: VolunteerHealthStatusProps) => {
 	const [loading, setLoading] = useState(false);
-	const { setValue, handleSubmit, getValues } = useForm<HealthStatusSchema>({
-		resolver: zodResolver(healthStatusSchema),
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const {
+		control,
+		handleSubmit,
+		getValues,
+		reset,
+		formState: { isValid }
+	} = useForm<VolunteerHealthStatusSchema>({
+		resolver: zodResolver(volunteerHealthStatusSchema),
 		defaultValues: undefined
 	});
 	const [vaccines, setHealthStatuses] = useState<{
@@ -99,6 +120,7 @@ export const VolunteerHealthStatus = ({
 				health_status: { id: number; name: string };
 			}) =>
 			() => {
+				setAnchorEl(null);
 				removeVolunteerHealthStatus(row.id)
 					.then(() => {
 						handlePageChange({
@@ -133,12 +155,32 @@ export const VolunteerHealthStatus = ({
 		{
 			field: 'actions',
 			headerName: t('commons.actions'),
-			width: 150,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
-					<IconButton onClick={handleRemoveVolunteerHealthStatus(params.row)}>
-						<DeleteIcon />
-					</IconButton>
+					<>
+						<IconButton
+							aria-label="more"
+							aria-controls="long-menu"
+							aria-haspopup="true"
+							onClick={(event) => {
+								event.stopPropagation();
+								setAnchorEl(event.currentTarget);
+							}}
+						>
+							<MoreVertIcon />
+						</IconButton>
+						<Menu
+							id="long-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={() => setAnchorEl(null)}
+						>
+							<MenuItem onClick={handleRemoveVolunteerHealthStatus(params.row)}>
+								{t('commons.delete')}
+							</MenuItem>
+						</Menu>
+					</>
 				);
 			}
 		}
@@ -152,10 +194,11 @@ export const VolunteerHealthStatus = ({
 			addVolunteerHealthStatus({
 				id: data.id,
 				volunteer_id: volunteer.id,
-				health_status_id: data.health_status_id,
+				healthStatus: data.healthStatus,
 				updated_at: new Date().toISOString()
 			})
 				.then(() => {
+					reset();
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -184,22 +227,31 @@ export const VolunteerHealthStatus = ({
 				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={9}>
-						<BasicAutocomplete
-							tableName="health_status"
-							defaultValue={null}
-							config={{
-								label: t('Volunteer.health_status'),
-								placeholder: ''
-							}}
-							onChange={(field) => {
-								console.log(field);
-								const uniqueFiled = field as BasicTable;
-								setValue('health_status_id', uniqueFiled?.id);
-							}}
+						<Controller
+							name="healthStatus"
+							control={control}
+							render={({ field }) => (
+								<BasicAutocomplete
+									tableName="health_status"
+									value={field.value ?? null}
+									config={{
+										label: t('Volunteer.health_status'),
+										placeholder: ''
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<Button type="submit" variant="contained" color="primary">
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							disabled={!isValid}
+						>
 							{t('commons.add')}
 						</Button>
 					</Grid>
@@ -208,6 +260,7 @@ export const VolunteerHealthStatus = ({
 					<DataGrid
 						rows={vaccines.data}
 						columns={columns}
+						disableColumnMenu={true}
 						loading={loading}
 						paginationMode="server"
 						rowCount={vaccines.total}

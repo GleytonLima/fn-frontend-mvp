@@ -23,9 +23,10 @@ export const listVolunteerVaccineDoses = async (
 
 export const addVolunteerVaccineDose = async (data: VaccineDoseSchema) => {
 	try {
+		console.log(data);
 		const response = await api.post(`/volunteer-vaccine-doses`, {
 			volunteer_id: data.volunteer_id,
-			vaccine_id: data.vaccine_id,
+			vaccine_id: data.vaccine.id,
 			dose_number: data.dose_number,
 			date_administered: data.date_administered
 		});

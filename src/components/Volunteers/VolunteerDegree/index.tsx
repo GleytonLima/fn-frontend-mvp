@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
 	Button,
@@ -9,8 +10,9 @@ import {
 } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import {
 	addVolunteerDegree,
@@ -21,6 +23,16 @@ import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
 import { VolunteerSchema } from '../VolunteerForm';
 
+const degreeSchema = z.object({
+	id: z.number(),
+	name: z.string()
+});
+const volunteerDegreeSchema = z.object({
+	degree: degreeSchema
+});
+
+export type VolunteerDegreeSchema = z.infer<typeof volunteerDegreeSchema>;
+
 interface VolunteerDegreeProps {
 	volunteer?: VolunteerSchema;
 	onSubmit: (payload: { degree?: string }) => void;
@@ -28,9 +40,20 @@ interface VolunteerDegreeProps {
 
 export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 	const [loading, setLoading] = useState(false);
-	const { handleSubmit, setValue } = useForm();
+	const {
+		control,
+		reset,
+		handleSubmit,
+		formState: { isValid }
+	} = useForm<VolunteerDegreeSchema>({
+		resolver: zodResolver(volunteerDegreeSchema),
+		defaultValues: {
+			degree: undefined
+		}
+	});
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
+
 	const [degrees, setDegrees] = useState<{
 		data: {
 			volunteer_id: number;
@@ -84,6 +107,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 				degree: { id: number; name: string };
 			}) =>
 			() => {
+				setAnchorEl(null);
 				removeVolunteerDegree(row.volunteer_id, row.degree_id)
 					.then(() => {
 						handlePageChange({
@@ -110,7 +134,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 		{
 			field: 'actions',
 			headerName: t('commons.actions'),
-			flex: 0.45,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
 					<>
@@ -148,6 +172,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 			}
 			addVolunteerDegree(volunteer.id, data.degree.id)
 				.then(() => {
+					reset();
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -157,7 +182,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 					console.error(err);
 				});
 		},
-		[handlePageChange, volunteer?.id]
+		[handlePageChange, volunteer?.id, reset]
 	);
 
 	useEffect(() => {
@@ -172,35 +197,44 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 			<Typography variant="h6" component="h2" gutterBottom>
 				{t('VolunteerDegree.title')}
 			</Typography>
-			<div style={{ width: '100%' }}>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
-						<Grid item xs={8}>
-							<BasicAutocomplete
-								tableName="degree"
-								defaultValue={null}
-								config={{
-									label: t('Volunteer.degree'),
-									placeholder: ''
-								}}
-								onChange={(field) => {
-									console.log(field);
-									setValue('degree', field);
-								}}
-							/>
-						</Grid>
-						<Grid item xs={3}>
-							<Button type="submit" variant="contained" color="primary">
-								{t('commons.add')}
-							</Button>
-						</Grid>
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
+					<Grid item xs={8}>
+						<Controller
+							name="degree"
+							control={control}
+							render={({ field }) => (
+								<BasicAutocomplete
+									tableName="degree"
+									value={field.value ?? null}
+									config={{
+										label: t('Volunteer.degree'),
+										placeholder: ''
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+								/>
+							)}
+						/>
 					</Grid>
-				</form>
-			</div>
+					<Grid item xs={3}>
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							disabled={!isValid}
+						>
+							{t('commons.add')}
+						</Button>
+					</Grid>
+				</Grid>
+			</form>
 			<div style={{ height: 250 }}>
 				<DataGrid
 					rows={degrees.data}
 					columns={columns}
+					disableColumnMenu={true}
 					loading={loading}
 					paginationMode="server"
 					rowCount={degrees.total}

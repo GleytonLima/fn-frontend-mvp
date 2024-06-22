@@ -1,4 +1,4 @@
-import { HealthStatusSchema } from '../../components/Volunteers/VolunteerHealthStatus';
+import { VolunteerHealthStatusSchema } from '../../components/Volunteers/VolunteerHealthStatus';
 import api from '../api.config';
 
 export const listVolunteerHealthStatuses = async (
@@ -21,11 +21,13 @@ export const listVolunteerHealthStatuses = async (
 	}
 };
 
-export const addVolunteerHealthStatus = async (data: HealthStatusSchema) => {
+export const addVolunteerHealthStatus = async (
+	data: VolunteerHealthStatusSchema
+) => {
 	try {
 		const response = await api.post(`/volunteer-health-statuses`, {
 			volunteer_id: data.volunteer_id,
-			health_status_id: data.health_status_id,
+			health_status_id: data.healthStatus.id,
 			updated_at: data.updated_at
 		});
 		return response.data;

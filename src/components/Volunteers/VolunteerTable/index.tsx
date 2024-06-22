@@ -42,17 +42,16 @@ export const VoluntariosTable = () => {
 	});
 
 	const handlePageChange = (params: { page: number; pageSize: number }) => {
-		console.log('Início da requisição de voluntários', params);
 		setLoading(true);
 		listVolunteersByMissionType({
 			limit: params.pageSize,
 			offset: params.page
 		}).then((voluntarios) => {
-			console.log('Fim da requisição de voluntários');
 			setVoluntarios(voluntarios);
 			setLoading(false);
 		});
 	};
+
 	useEffect(() => {
 		handlePageChange({
 			page: 0,
@@ -96,7 +95,7 @@ export const VoluntariosTable = () => {
 		{
 			field: 'action',
 			headerName: t('commons.actions'),
-			flex: 0.45,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
 					<>
@@ -142,6 +141,7 @@ export const VoluntariosTable = () => {
 							location: width > 600,
 							action: true
 						}}
+						disableColumnMenu={true}
 						loading={loading}
 						paginationMode="server"
 						rowCount={voluntarios.total}

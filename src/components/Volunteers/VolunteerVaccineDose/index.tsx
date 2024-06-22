@@ -1,16 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
+import {
+	Button,
+	Grid,
+	IconButton,
+	Menu,
+	MenuItem,
+	TextField,
+	Typography
+} from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useCallback, useEffect, useState } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ptBR } from '@mui/x-date-pickers/locales';
+import useWindowDimensions from '../../../hooks/window-dimensions';
 import {
 	addVolunteerVaccineDose,
 	listVolunteerVaccineDoses,
@@ -20,12 +28,16 @@ import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
 import { VolunteerSchema } from '../VolunteerForm';
 
+const vaccineSchema = z.object({
+	id: z.number(),
+	name: z.string()
+});
 const vaccineDoseSchema = z.object({
 	id: z.number().optional(),
 	volunteer_id: z.number().optional(),
-	vaccine_id: z.number().optional(),
-	dose_number: z.coerce.number(),
-	date_administered: z.string().optional()
+	vaccine: vaccineSchema,
+	dose_number: z.coerce.number().gt(0),
+	date_administered: z.date()
 });
 
 export type VaccineDoseSchema = z.infer<typeof vaccineDoseSchema>;
@@ -39,15 +51,24 @@ export const VolunteerVaccineDose = ({
 	volunteer
 }: VolunteerVaccineDoseProps) => {
 	const [loading, setLoading] = useState(false);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const { width } = useWindowDimensions();
+	const open = Boolean(anchorEl);
 	const {
-		setValue,
 		register,
+		control,
+		reset,
 		handleSubmit,
-		getValues,
-		formState: { errors }
+		formState: { errors, isValid }
 	} = useForm<VaccineDoseSchema>({
 		resolver: zodResolver(vaccineDoseSchema),
-		defaultValues: undefined
+		defaultValues: {
+			id: undefined,
+			volunteer_id: volunteer?.id,
+			vaccine: undefined,
+			dose_number: 1,
+			date_administered: undefined
+		}
 	});
 	const [vaccines, setVaccineDoses] = useState<{
 		data: {
@@ -89,8 +110,8 @@ export const VolunteerVaccineDose = ({
 				limit: params.pageSize,
 				offset: params.page
 			})
-				.then((degrees) => {
-					setVaccineDoses(degrees);
+				.then((results) => {
+					setVaccineDoses(results);
 					setLoading(false);
 				})
 				.catch((err) => {
@@ -110,6 +131,7 @@ export const VolunteerVaccineDose = ({
 				date_administered: string;
 			}) =>
 			() => {
+				setAnchorEl(null);
 				removeVolunteerVaccineDose(row.id)
 					.then(() => {
 						handlePageChange({
@@ -127,7 +149,7 @@ export const VolunteerVaccineDose = ({
 	const columns: GridColDef<(typeof vaccines.data)[number]>[] = [
 		{
 			field: 'vaccine',
-			headerName: t('Volunteer.name'),
+			headerName: t('VolunteerVaccineDose.vaccine'),
 			flex: 1,
 			renderCell: (params) => {
 				return params.row.vaccine.name;
@@ -152,12 +174,32 @@ export const VolunteerVaccineDose = ({
 		{
 			field: 'actions',
 			headerName: t('commons.actions'),
-			width: 150,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
-					<IconButton onClick={handleRemoveVolunteerVaccineDose(params.row)}>
-						<DeleteIcon />
-					</IconButton>
+					<>
+						<IconButton
+							aria-label="more"
+							aria-controls="long-menu"
+							aria-haspopup="true"
+							onClick={(event) => {
+								event.stopPropagation();
+								setAnchorEl(event.currentTarget);
+							}}
+						>
+							<MoreVertIcon />
+						</IconButton>
+						<Menu
+							id="long-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={() => setAnchorEl(null)}
+						>
+							<MenuItem onClick={handleRemoveVolunteerVaccineDose(params.row)}>
+								{t('commons.delete')}
+							</MenuItem>
+						</Menu>
+					</>
 				);
 			}
 		}
@@ -168,14 +210,16 @@ export const VolunteerVaccineDose = ({
 			if (!volunteer?.id) {
 				return;
 			}
+			console.log(data);
 			addVolunteerVaccineDose({
 				id: data.id,
 				volunteer_id: volunteer.id,
-				vaccine_id: data.vaccine_id,
+				vaccine: data.vaccine,
 				dose_number: data.dose_number,
-				date_administered: data.date_administered
+				date_administered: data.date_administered.toISOString()
 			})
 				.then(() => {
+					reset();
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -185,7 +229,7 @@ export const VolunteerVaccineDose = ({
 					console.error(err);
 				});
 		},
-		[handlePageChange, volunteer?.id]
+		[handlePageChange, volunteer?.id, reset]
 	);
 
 	useEffect(() => {
@@ -197,28 +241,31 @@ export const VolunteerVaccineDose = ({
 
 	return (
 		<>
-			<pre>{JSON.stringify(getValues, null, 2)}</pre>
+			<Typography variant="h6" component="h2" gutterBottom>
+				{t('VolunteerVaccineDose.title')}
+			</Typography>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Typography variant="h6" component="h2" gutterBottom>
-					{t('VolunteerVaccineDose.title')}
-				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
-					<Grid item xs={4}>
-						<BasicAutocomplete
-							tableName="vaccine"
-							defaultValue={null}
-							config={{
-								label: t('Volunteer.vaccine'),
-								placeholder: ''
-							}}
-							onChange={(field) => {
-								console.log(field);
-								const uniqueFiled = field as BasicTable;
-								setValue('vaccine_id', uniqueFiled?.id);
-							}}
+					<Grid item xs={5}>
+						<Controller
+							name="vaccine"
+							control={control}
+							render={({ field }) => (
+								<BasicAutocomplete
+									tableName="vaccine"
+									value={field.value ?? null}
+									config={{
+										label: t('Volunteer.vaccine'),
+										placeholder: ''
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+								/>
+							)}
 						/>
 					</Grid>
-					<Grid item xs={2}>
+					<Grid item xs={3}>
 						<TextField
 							{...register('dose_number')}
 							size="small"
@@ -228,54 +275,77 @@ export const VolunteerVaccineDose = ({
 							helperText={errors.dose_number?.message}
 						/>
 					</Grid>
-					<Grid item xs={3}>
-						<DatePicker
-							label={t('VolunteerVaccineDose.date_administered')}
-							onError={(error) => {
-								console.error(error);
-							}}
-							onChange={(newValue) =>
-								setValue('date_administered', newValue?.toISOString() ?? '')
-							}
-							format="dd/MM/yyyy"
-							localeText={
-								ptBR.components.MuiLocalizationProvider.defaultProps.localeText
-							}
-							slotProps={{ textField: { size: 'small' } }}
+					<Grid item xs={4}>
+						<Controller
+							name="date_administered"
+							control={control}
+							render={({ field }) => (
+								<DatePicker
+									label={t('VolunteerVaccineDose.date_administered')}
+									value={field.value ?? null}
+									onError={(error) => {
+										console.error(error);
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+									format="dd/MM/yyyy"
+									localeText={
+										ptBR.components.MuiLocalizationProvider.defaultProps
+											.localeText
+									}
+									slotProps={{ textField: { size: 'small' } }}
+								/>
+							)}
 						/>
 					</Grid>
+				</Grid>
+
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={2}>
-						<Button type="submit" variant="contained" color="primary">
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							disabled={!isValid}
+						>
 							{t('commons.add')}
 						</Button>
 					</Grid>
 				</Grid>
-				<div style={{ height: 250, width: '100%' }}>
-					<DataGrid
-						rows={vaccines.data}
-						columns={columns}
-						loading={loading}
-						paginationMode="server"
-						rowCount={vaccines.total}
-						pageSizeOptions={[1, 3, 10]}
-						disableRowSelectionOnClick
-						localeText={{
-							noRowsLabel: t('VolunteerVaccineDose.noRowsLabel'),
-							MuiTablePagination: {
-								labelDisplayedRows
-							}
-						}}
-						onPaginationModelChange={(params) => {
-							handlePageChange({
-								page: params.page,
-								pageSize: params.pageSize
-							});
-						}}
-						slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-						sx={{ '--DataGrid-overlayHeight': '300px' }}
-					/>
-				</div>
 			</form>
+			<div style={{ height: 250 }}>
+				<DataGrid
+					rows={vaccines.data}
+					columns={columns}
+					disableColumnMenu={true}
+					columnVisibilityModel={{
+						vaccine: true,
+						dose_number: width > 600,
+						date_administered: width > 600,
+						action: true
+					}}
+					loading={loading}
+					paginationMode="server"
+					rowCount={vaccines.total}
+					pageSizeOptions={[1, 3, 10]}
+					disableRowSelectionOnClick
+					localeText={{
+						noRowsLabel: t('VolunteerVaccineDose.noRowsLabel'),
+						MuiTablePagination: {
+							labelDisplayedRows
+						}
+					}}
+					onPaginationModelChange={(params) => {
+						handlePageChange({
+							page: params.page,
+							pageSize: params.pageSize
+						});
+					}}
+					slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+					sx={{ '--DataGrid-overlayHeight': '300px' }}
+				/>
+			</div>
 		</>
 	);
 };

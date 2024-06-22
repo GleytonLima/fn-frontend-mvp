@@ -1,15 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, IconButton, Typography } from '@mui/material';
+import {
+	Button,
+	Grid,
+	IconButton,
+	Menu,
+	MenuItem,
+	Typography
+} from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useCallback, useEffect, useState } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ptBR } from '@mui/x-date-pickers/locales';
 import {
 	addVolunteerMedicalExam,
@@ -21,13 +27,20 @@ import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const medicalExamSchema = z.object({
-	id: z.number().optional(),
-	volunteer_id: z.number().optional(),
-	medical_exam_id: z.number().optional(),
-	exam_date: z.string().optional()
+	id: z.number(),
+	name: z.string()
 });
 
-export type MedicalExamSchema = z.infer<typeof medicalExamSchema>;
+const volunteerMedicalExamSchema = z.object({
+	id: z.number().optional(),
+	volunteer_id: z.number().optional(),
+	medicalExam: medicalExamSchema,
+	exam_date: z.date()
+});
+
+export type VolunteerMedicalExamSchema = z.infer<
+	typeof volunteerMedicalExamSchema
+>;
 
 interface VolunteerMedicalExamProps {
 	volunteer?: VolunteerSchema;
@@ -38,8 +51,16 @@ export const VolunteerMedicalExam = ({
 	volunteer
 }: VolunteerMedicalExamProps) => {
 	const [loading, setLoading] = useState(false);
-	const { setValue, handleSubmit, getValues } = useForm<MedicalExamSchema>({
-		resolver: zodResolver(medicalExamSchema),
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const {
+		handleSubmit,
+		getValues,
+		reset,
+		control,
+		formState: { isValid }
+	} = useForm<VolunteerMedicalExamSchema>({
+		resolver: zodResolver(volunteerMedicalExamSchema),
 		defaultValues: undefined
 	});
 	const [medicalExams, setMedicalExams] = useState<{
@@ -100,6 +121,7 @@ export const VolunteerMedicalExam = ({
 				exam_date: string;
 			}) =>
 			() => {
+				setAnchorEl(null);
 				removeVolunteerMedicalExam(row.id)
 					.then(() => {
 						handlePageChange({
@@ -134,12 +156,32 @@ export const VolunteerMedicalExam = ({
 		{
 			field: 'actions',
 			headerName: t('commons.actions'),
-			width: 150,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
-					<IconButton onClick={handleRemoveVolunteerMedicalExam(params.row)}>
-						<DeleteIcon />
-					</IconButton>
+					<>
+						<IconButton
+							aria-label="more"
+							aria-controls="long-menu"
+							aria-haspopup="true"
+							onClick={(event) => {
+								event.stopPropagation();
+								setAnchorEl(event.currentTarget);
+							}}
+						>
+							<MoreVertIcon />
+						</IconButton>
+						<Menu
+							id="long-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={() => setAnchorEl(null)}
+						>
+							<MenuItem onClick={handleRemoveVolunteerMedicalExam(params.row)}>
+								{t('commons.delete')}
+							</MenuItem>
+						</Menu>
+					</>
 				);
 			}
 		}
@@ -153,10 +195,11 @@ export const VolunteerMedicalExam = ({
 			addVolunteerMedicalExam({
 				id: data.id,
 				volunteer_id: volunteer.id,
-				medical_exam_id: data.medical_exam_id,
-				exam_date: data.exam_date
+				medicalExam: data.medicalExam,
+				exam_date: data.exam_date.toISOString()
 			})
 				.then(() => {
+					reset();
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -166,7 +209,7 @@ export const VolunteerMedicalExam = ({
 					console.error(err);
 				});
 		},
-		[handlePageChange, volunteer?.id]
+		[handlePageChange, volunteer?.id, reset]
 	);
 
 	useEffect(() => {
@@ -185,38 +228,55 @@ export const VolunteerMedicalExam = ({
 				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={6}>
-						<BasicAutocomplete
-							tableName="medical_exam"
-							defaultValue={null}
-							config={{
-								label: t('Volunteer.medicalExam'),
-								placeholder: ''
-							}}
-							onChange={(field) => {
-								console.log(field);
-								const uniqueFiled = field as BasicTable;
-								setValue('medical_exam_id', uniqueFiled?.id);
-							}}
+						<Controller
+							name="medicalExam"
+							control={control}
+							render={({ field }) => (
+								<BasicAutocomplete
+									tableName="medical_exam"
+									value={field.value ?? null}
+									config={{
+										label: t('Volunteer.medicalExam'),
+										placeholder: ''
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<DatePicker
-							label={t('VolunteerMedicalExam.examDate')}
-							onError={(error) => {
-								console.error(error);
-							}}
-							onChange={(newValue) =>
-								setValue('exam_date', newValue?.toISOString() ?? '')
-							}
-							format="dd/MM/yyyy"
-							localeText={
-								ptBR.components.MuiLocalizationProvider.defaultProps.localeText
-							}
-							slotProps={{ textField: { size: 'small' } }}
+						<Controller
+							name="exam_date"
+							control={control}
+							render={({ field }) => (
+								<DatePicker
+									label={t('VolunteerMedicalExam.examDate')}
+									value={field.value ?? null}
+									onError={(error) => {
+										console.error(error);
+									}}
+									onChange={(newValue) => {
+										field.onChange(newValue);
+									}}
+									format="dd/MM/yyyy"
+									localeText={
+										ptBR.components.MuiLocalizationProvider.defaultProps
+											.localeText
+									}
+									slotProps={{ textField: { size: 'small' } }}
+								/>
+							)}
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<Button type="submit" variant="contained" color="primary">
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							disabled={!isValid}
+						>
 							{t('commons.add')}
 						</Button>
 					</Grid>
@@ -225,6 +285,12 @@ export const VolunteerMedicalExam = ({
 					<DataGrid
 						rows={medicalExams.data}
 						columns={columns}
+						columnVisibilityModel={{
+							medical_exam: true,
+							exam_date: true,
+							actions: true
+						}}
+						disableColumnMenu={true}
 						loading={loading}
 						paginationMode="server"
 						rowCount={medicalExams.total}

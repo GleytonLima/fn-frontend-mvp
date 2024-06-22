@@ -1,4 +1,4 @@
-import { MedicalExamSchema } from '../../components/Volunteers/VolunteerMedicalExam';
+import { VolunteerMedicalExamSchema } from '../../components/Volunteers/VolunteerMedicalExam';
 import api from '../api.config';
 
 export const listVolunteerMedicalExams = async (
@@ -21,11 +21,13 @@ export const listVolunteerMedicalExams = async (
 	}
 };
 
-export const addVolunteerMedicalExam = async (data: MedicalExamSchema) => {
+export const addVolunteerMedicalExam = async (
+	data: VolunteerMedicalExamSchema
+) => {
 	try {
 		const response = await api.post(`/volunteer-medical-exams`, {
 			volunteer_id: data.volunteer_id,
-			medical_exam_id: data.medical_exam_id,
+			medical_exam_id: data.medicalExam.id,
 			exam_date: data.exam_date
 		});
 		return response.data;
