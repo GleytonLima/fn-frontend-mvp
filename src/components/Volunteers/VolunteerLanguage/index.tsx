@@ -265,6 +265,7 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 					columns={columns}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					loading={loading}
 					paginationMode="server"
 					rowCount={postgraduateDegrees.total}

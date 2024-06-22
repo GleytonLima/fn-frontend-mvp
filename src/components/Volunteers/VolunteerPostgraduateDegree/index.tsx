@@ -267,6 +267,7 @@ export const VolunteerPostgraduateDegree = ({
 					columns={columns}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					loading={loading}
 					paginationMode="server"
 					rowCount={postgraduateDegrees.total}

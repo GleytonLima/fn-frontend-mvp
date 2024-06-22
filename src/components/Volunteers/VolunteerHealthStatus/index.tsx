@@ -289,6 +289,7 @@ export const VolunteerHealthStatus = ({
 					columns={columns}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					loading={loading}
 					paginationMode="server"
 					rowCount={vaccines.total}

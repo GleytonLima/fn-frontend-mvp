@@ -72,7 +72,7 @@ export const BasicTableComponent = () => {
 		{
 			field: 'action',
 			headerName: t('commons.actions'),
-			flex: 1,
+			flex: 0.35,
 			renderCell: (params) => {
 				return (
 					<>
@@ -112,6 +112,9 @@ export const BasicTableComponent = () => {
 					<DataGrid
 						rows={results.data}
 						columns={columns}
+						disableColumnMenu
+						disableColumnSorting
+						disableColumnResize
 						loading={loading}
 						paginationMode="server"
 						rowCount={results.total}

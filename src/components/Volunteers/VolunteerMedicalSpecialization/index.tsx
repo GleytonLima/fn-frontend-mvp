@@ -270,6 +270,7 @@ export const VolunteerMedicalSpecialization = ({
 					columns={columns}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					loading={loading}
 					paginationMode="server"
 					rowCount={professionalBoards.total}

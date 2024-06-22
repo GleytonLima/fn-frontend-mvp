@@ -299,6 +299,7 @@ export const VolunteerProfessionalBoard = ({
 					columns={columns}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					columnVisibilityModel={{
 						professional_board: true,
 						code: width > 600 ? true : false,

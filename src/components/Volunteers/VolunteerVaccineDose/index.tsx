@@ -348,6 +348,7 @@ export const VolunteerVaccineDose = ({
 					columns={columns}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					columnVisibilityModel={{
 						vaccine: true,
 						dose_number: width > 600,
