@@ -1,9 +1,18 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {
+	Button,
+	Grid,
+	IconButton,
+	Menu,
+	MenuItem,
+	TextField,
+	Typography
+} from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import useWindowDimensions from '../../../hooks/window-dimensions';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import {
 	addVolunteerProfessionalBoard,
@@ -23,6 +32,9 @@ export const VolunteerProfessionalBoard = ({
 	volunteer
 }: VolunteerProfessionalBoardProps) => {
 	const [loading, setLoading] = useState(false);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const { width } = useWindowDimensions();
 	const {
 		handleSubmit,
 		register,
@@ -119,14 +131,34 @@ export const VolunteerProfessionalBoard = ({
 		{
 			field: 'actions',
 			headerName: t('commons.actions'),
-			width: 150,
+			flex: 0.45,
 			renderCell: (params) => {
 				return (
-					<IconButton
-						onClick={handleRemoveVolunteerProfessionalBoard(params.row)}
-					>
-						<DeleteIcon />
-					</IconButton>
+					<>
+						<IconButton
+							aria-label="more"
+							aria-controls="long-menu"
+							aria-haspopup="true"
+							onClick={(event) => {
+								event.stopPropagation();
+								setAnchorEl(event.currentTarget);
+							}}
+						>
+							<MoreVertIcon />
+						</IconButton>
+						<Menu
+							id="long-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={() => setAnchorEl(null)}
+						>
+							<MenuItem
+								onClick={handleRemoveVolunteerProfessionalBoard(params.row)}
+							>
+								{t('commons.delete')}
+							</MenuItem>
+						</Menu>
+					</>
 				);
 			}
 		}
@@ -203,6 +235,11 @@ export const VolunteerProfessionalBoard = ({
 					<DataGrid
 						rows={professionalBoards.data}
 						columns={columns}
+						columnVisibilityModel={{
+							professional_board: true,
+							code: width > 600 ? true : false,
+							actions: true
+						}}
 						loading={loading}
 						paginationMode="server"
 						rowCount={professionalBoards.total}

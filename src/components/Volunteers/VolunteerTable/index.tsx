@@ -4,6 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import useWindowDimensions from '../../../hooks/window-dimensions';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import { Volunteer } from '../../../models/volunteer';
 import { listVolunteersByMissionType } from '../../../services/volunteers/volunteer.service';
@@ -12,6 +13,7 @@ export const VoluntariosTable = () => {
 	const [loading, setLoading] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
+	const { width } = useWindowDimensions();
 	const { t } = useTranslation();
 
 	const navigate = useNavigate();
@@ -94,6 +96,7 @@ export const VoluntariosTable = () => {
 		{
 			field: 'action',
 			headerName: t('commons.actions'),
+			flex: 0.45,
 			renderCell: (params) => {
 				return (
 					<>
@@ -125,13 +128,20 @@ export const VoluntariosTable = () => {
 	return (
 		<>
 			<Box sx={{ p: 4 }}>
+				<Typography variant="h5" component="h2">
+					{t('VoluntariosTable.title')}
+				</Typography>
 				<Box sx={{ height: 371, width: '100%' }}>
-					<Typography variant="h5" component="h2">
-						{t('VoluntariosTable.title')}
-					</Typography>
 					<DataGrid
 						rows={voluntarios.data}
 						columns={columns}
+						columnVisibilityModel={{
+							full_name: true,
+							email: width > 600,
+							volunteer_degree: width > 600,
+							location: width > 600,
+							action: true
+						}}
 						loading={loading}
 						paginationMode="server"
 						rowCount={voluntarios.total}

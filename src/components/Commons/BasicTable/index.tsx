@@ -72,6 +72,7 @@ export const BasicTableComponent = () => {
 		{
 			field: 'action',
 			headerName: t('commons.actions'),
+			flex: 1,
 			renderCell: (params) => {
 				return (
 					<>

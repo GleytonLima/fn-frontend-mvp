@@ -41,7 +41,7 @@ export const BasicTableFilterForm = () => {
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
-				<Grid item xs={5}>
+				<Grid item xs={8}>
 					<TextField
 						{...register('name')}
 						size="small"
@@ -66,7 +66,7 @@ export const BasicTableFilterForm = () => {
 						}}
 					/>
 				</Grid>
-				<Grid item xs={3} style={{ display: 'flex' }}>
+				<Grid item xs={4} style={{ display: 'flex' }}>
 					<Button variant="contained" color="primary" type="submit">
 						{t('commons.search')}
 					</Button>
