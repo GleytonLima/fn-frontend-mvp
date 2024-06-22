@@ -2,13 +2,15 @@
 	"commons": {
 		"save": "Salvar",
 		"cancel": "Cancelar",
+		"confirm": "Confirmar",
+		"deleteTitle": "Excluir",
+		"deleteMessage": "Tem certeza que deseja excluir este registro?",
 		"edit": "Editar",
 		"delete": "Excluir",
 		"remove": "Remover",
 		"add": "Adicionar",
 		"close": "Fechar",
 		"search": "Pesquisar",
-		"confirm": "Confirmar",
 		"yes": "Sim",
 		"no": "Não",
 		"error": "Erro",
@@ -115,7 +117,7 @@
 	"VolunteerProfessionalBoard": {
 		"title": "Conselhos Profissionais",
 		"board": "Conselho",
-		"code": "Código",
+		"code": "Nº Registro",
 		"noRowsLabel": "Nenhum conselho profissional encontrado"
 	},
 	"VolunteerMedicalSpecialization": {
