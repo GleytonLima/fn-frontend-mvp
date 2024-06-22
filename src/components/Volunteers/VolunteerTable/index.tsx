@@ -141,7 +141,9 @@ export const VoluntariosTable = () => {
 							location: width > 600,
 							action: true
 						}}
-						disableColumnMenu={true}
+						disableColumnMenu
+						disableColumnSorting
+						disableColumnResize
 						loading={loading}
 						paginationMode="server"
 						rowCount={voluntarios.total}

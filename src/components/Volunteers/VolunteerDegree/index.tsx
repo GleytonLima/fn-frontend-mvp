@@ -264,6 +264,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 					columns={columns}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					loading={loading}
 					paginationMode="server"
 					rowCount={degrees.total}

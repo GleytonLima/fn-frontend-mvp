@@ -321,6 +321,7 @@ export const VolunteerMedicalExam = ({
 					}}
 					disableColumnMenu
 					disableColumnSorting
+					disableColumnResize
 					loading={loading}
 					paginationMode="server"
 					rowCount={medicalExams.total}
