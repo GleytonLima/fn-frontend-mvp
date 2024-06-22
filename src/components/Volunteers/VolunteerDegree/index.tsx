@@ -21,6 +21,7 @@ import {
 } from '../../../services/volunteers/volunteer-degree.service';
 import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
+import { DialogConfirmation } from '../../Commons/DialogConfirmation';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const degreeSchema = z.object({
@@ -40,6 +41,14 @@ interface VolunteerDegreeProps {
 
 export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 	const [loading, setLoading] = useState(false);
+	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
+		open: false,
+		value: undefined
+	} as {
+		open: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		value?: any;
+	});
 	const {
 		control,
 		reset,
@@ -100,27 +109,23 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 		[volunteer?.id]
 	);
 
-	const handleRemoveVolunteerDegree = useCallback(
-		(row: {
-				volunteer_id: number;
-				degree_id: number;
-				degree: { id: number; name: string };
-			}) =>
-			() => {
-				setAnchorEl(null);
-				removeVolunteerDegree(row.volunteer_id, row.degree_id)
-					.then(() => {
-						handlePageChange({
-							page: 0,
-							pageSize: 5
-						});
-					})
-					.catch((err) => {
-						console.error(err);
-					});
-			},
-		[handlePageChange]
-	);
+	const handleRemoveVolunteerDegree = (row: {
+		volunteer_id: number;
+		degree_id: number;
+		degree: { id: number; name: string };
+	}) => {
+		setAnchorEl(null);
+		removeVolunteerDegree(row.volunteer_id, row.degree_id)
+			.then(() => {
+				handlePageChange({
+					page: 0,
+					pageSize: 5
+				});
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
 
 	const columns: GridColDef<(typeof degrees.data)[number]>[] = [
 		{
@@ -155,7 +160,15 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 							open={open}
 							onClose={() => setAnchorEl(null)}
 						>
-							<MenuItem onClick={handleRemoveVolunteerDegree(params.row)}>
+							<MenuItem
+								onClick={() => {
+									setAnchorEl(null);
+									setOpenDeleteConfirmation({
+										open: true,
+										value: params.row
+									});
+								}}
+							>
 								{t('commons.delete')}
 							</MenuItem>
 						</Menu>
@@ -197,6 +210,21 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 			<Typography variant="h6" component="h2" gutterBottom>
 				{t('VolunteerDegree.title')}
 			</Typography>
+			<DialogConfirmation
+				currentState={{
+					open: openDeleteConfirmation.open,
+					value: openDeleteConfirmation.value
+				}}
+				model="delete"
+				onClose={(e) => {
+					setOpenDeleteConfirmation({
+						open: false
+					});
+					if (e) {
+						handleRemoveVolunteerDegree(e);
+					}
+				}}
+			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={8}>
@@ -234,7 +262,8 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 				<DataGrid
 					rows={degrees.data}
 					columns={columns}
-					disableColumnMenu={true}
+					disableColumnMenu
+					disableColumnSorting
 					loading={loading}
 					paginationMode="server"
 					rowCount={degrees.total}

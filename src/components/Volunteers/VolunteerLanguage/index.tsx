@@ -21,6 +21,7 @@ import {
 } from '../../../services/volunteers/volunteer-language.service';
 import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
+import { DialogConfirmation } from '../../Commons/DialogConfirmation';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const languageSchema = z.object({
@@ -41,6 +42,14 @@ interface VolunteerLanguageProps {
 
 export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 	const [loading, setLoading] = useState(false);
+	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
+		open: false,
+		value: undefined
+	} as {
+		open: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		value?: any;
+	});
 	const {
 		control,
 		reset,
@@ -100,27 +109,23 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 		[volunteer?.id]
 	);
 
-	const handleRemoveVolunteerLanguage = useCallback(
-		(row: {
-				volunteer_id: number;
-				language_id: number;
-				language: { id: number; name: string };
-			}) =>
-			() => {
-				setAnchorEl(null);
-				removeLanguage(row.volunteer_id, row.language_id)
-					.then(() => {
-						handlePageChange({
-							page: 0,
-							pageSize: 5
-						});
-					})
-					.catch((err) => {
-						console.error(err);
-					});
-			},
-		[handlePageChange]
-	);
+	const handleRemoveVolunteerLanguage = (row: {
+		volunteer_id: number;
+		language_id: number;
+		language: { id: number; name: string };
+	}) => {
+		setAnchorEl(null);
+		removeLanguage(row.volunteer_id, row.language_id)
+			.then(() => {
+				handlePageChange({
+					page: 0,
+					pageSize: 5
+				});
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
 
 	const columns: GridColDef<(typeof postgraduateDegrees.data)[number]>[] = [
 		{
@@ -155,7 +160,15 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 							open={open}
 							onClose={() => setAnchorEl(null)}
 						>
-							<MenuItem onClick={handleRemoveVolunteerLanguage(params.row)}>
+							<MenuItem
+								onClick={() => {
+									setAnchorEl(null);
+									setOpenDeleteConfirmation({
+										open: true,
+										value: params.row
+									});
+								}}
+							>
 								{t('commons.delete')}
 							</MenuItem>
 						</Menu>
@@ -197,6 +210,21 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 			<Typography variant="h6" component="h2" gutterBottom>
 				{t('VolunteerLanguage.title')}
 			</Typography>
+			<DialogConfirmation
+				currentState={{
+					open: openDeleteConfirmation.open,
+					value: openDeleteConfirmation.value
+				}}
+				model="delete"
+				onClose={(e) => {
+					setOpenDeleteConfirmation({
+						open: false
+					});
+					if (e) {
+						handleRemoveVolunteerLanguage(e);
+					}
+				}}
+			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={8}>
@@ -235,7 +263,8 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 				<DataGrid
 					rows={postgraduateDegrees.data}
 					columns={columns}
-					disableColumnMenu={true}
+					disableColumnMenu
+					disableColumnSorting
 					loading={loading}
 					paginationMode="server"
 					rowCount={postgraduateDegrees.total}

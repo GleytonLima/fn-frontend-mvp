@@ -22,6 +22,7 @@ import {
 } from '../../../services/volunteers/volunteer-health-statuses.service';
 import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
+import { DialogConfirmation } from '../../Commons/DialogConfirmation';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const healthStatusSchema = z.object({
@@ -49,12 +50,19 @@ export const VolunteerHealthStatus = ({
 	volunteer
 }: VolunteerHealthStatusProps) => {
 	const [loading, setLoading] = useState(false);
+	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
+		open: false,
+		value: undefined
+	} as {
+		open: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		value?: any;
+	});
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const {
 		control,
 		handleSubmit,
-		getValues,
 		reset,
 		formState: { isValid }
 	} = useForm<VolunteerHealthStatusSchema>({
@@ -111,29 +119,25 @@ export const VolunteerHealthStatus = ({
 		[volunteer?.id]
 	);
 
-	const handleRemoveVolunteerHealthStatus = useCallback(
-		(row: {
-				id: number;
-				volunteer_id: number;
-				health_status_id: number;
-				updated_at: string;
-				health_status: { id: number; name: string };
-			}) =>
-			() => {
-				setAnchorEl(null);
-				removeVolunteerHealthStatus(row.id)
-					.then(() => {
-						handlePageChange({
-							page: 0,
-							pageSize: 5
-						});
-					})
-					.catch((err) => {
-						console.error(err);
-					});
-			},
-		[handlePageChange]
-	);
+	const handleRemoveVolunteerHealthStatus = (row: {
+		id: number;
+		volunteer_id: number;
+		health_status_id: number;
+		updated_at: string;
+		health_status: { id: number; name: string };
+	}) => {
+		setAnchorEl(null);
+		removeVolunteerHealthStatus(row.id)
+			.then(() => {
+				handlePageChange({
+					page: 0,
+					pageSize: 5
+				});
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
 
 	const columns: GridColDef<(typeof vaccines.data)[number]>[] = [
 		{
@@ -176,7 +180,15 @@ export const VolunteerHealthStatus = ({
 							open={open}
 							onClose={() => setAnchorEl(null)}
 						>
-							<MenuItem onClick={handleRemoveVolunteerHealthStatus(params.row)}>
+							<MenuItem
+								onClick={() => {
+									setAnchorEl(null);
+									setOpenDeleteConfirmation({
+										open: true,
+										value: params.row
+									});
+								}}
+							>
 								{t('commons.delete')}
 							</MenuItem>
 						</Menu>
@@ -208,7 +220,7 @@ export const VolunteerHealthStatus = ({
 					console.error(err);
 				});
 		},
-		[handlePageChange, volunteer?.id]
+		[handlePageChange, volunteer?.id, reset]
 	);
 
 	useEffect(() => {
@@ -220,13 +232,27 @@ export const VolunteerHealthStatus = ({
 
 	return (
 		<>
-			<pre>{JSON.stringify(getValues, null, 2)}</pre>
+			<Typography variant="h6" component="h2" gutterBottom>
+				{t('VolunteerHealthStatus.title')}
+			</Typography>
+			<DialogConfirmation
+				currentState={{
+					open: openDeleteConfirmation.open,
+					value: openDeleteConfirmation.value
+				}}
+				model="delete"
+				onClose={(e) => {
+					setOpenDeleteConfirmation({
+						open: false
+					});
+					if (e) {
+						handleRemoveVolunteerHealthStatus(e);
+					}
+				}}
+			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Typography variant="h6" component="h2" gutterBottom>
-					{t('VolunteerHealthStatus.title')}
-				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
-					<Grid item xs={9}>
+					<Grid item xs={8}>
 						<Controller
 							name="healthStatus"
 							control={control}
@@ -256,33 +282,34 @@ export const VolunteerHealthStatus = ({
 						</Button>
 					</Grid>
 				</Grid>
-				<div style={{ height: 250, width: '100%' }}>
-					<DataGrid
-						rows={vaccines.data}
-						columns={columns}
-						disableColumnMenu={true}
-						loading={loading}
-						paginationMode="server"
-						rowCount={vaccines.total}
-						pageSizeOptions={[1, 3, 10]}
-						disableRowSelectionOnClick
-						localeText={{
-							noRowsLabel: t('VolunteerHealthStatus.noRowsLabel'),
-							MuiTablePagination: {
-								labelDisplayedRows
-							}
-						}}
-						onPaginationModelChange={(params) => {
-							handlePageChange({
-								page: params.page,
-								pageSize: params.pageSize
-							});
-						}}
-						slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-						sx={{ '--DataGrid-overlayHeight': '300px' }}
-					/>
-				</div>
 			</form>
+			<div style={{ height: 250 }}>
+				<DataGrid
+					rows={vaccines.data}
+					columns={columns}
+					disableColumnMenu
+					disableColumnSorting
+					loading={loading}
+					paginationMode="server"
+					rowCount={vaccines.total}
+					pageSizeOptions={[1, 3, 10]}
+					disableRowSelectionOnClick
+					localeText={{
+						noRowsLabel: t('VolunteerHealthStatus.noRowsLabel'),
+						MuiTablePagination: {
+							labelDisplayedRows
+						}
+					}}
+					onPaginationModelChange={(params) => {
+						handlePageChange({
+							page: params.page,
+							pageSize: params.pageSize
+						});
+					}}
+					slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+					sx={{ '--DataGrid-overlayHeight': '300px' }}
+				/>
+			</div>
 		</>
 	);
 };

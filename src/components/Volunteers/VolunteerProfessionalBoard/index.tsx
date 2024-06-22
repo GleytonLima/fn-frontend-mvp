@@ -23,6 +23,7 @@ import {
 } from '../../../services/volunteers/volunteer-professional-boards.service';
 import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
+import { DialogConfirmation } from '../../Commons/DialogConfirmation';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const professionalBoardSchema = z.object({
@@ -51,6 +52,14 @@ export const VolunteerProfessionalBoard = ({
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const { width } = useWindowDimensions();
+	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
+		open: false,
+		value: undefined
+	} as {
+		open: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		value?: any;
+	});
 	const {
 		control,
 		reset,
@@ -111,28 +120,24 @@ export const VolunteerProfessionalBoard = ({
 		[volunteer?.id]
 	);
 
-	const handleRemoveVolunteerProfessionalBoard = useCallback(
-		(row: {
-				volunteer_id: number;
-				professional_board_id: number;
-				code: string;
-				professional_board: { id: number; name: string };
-			}) =>
-			() => {
-				setAnchorEl(null);
-				removeProfessionalBoard(row.volunteer_id, row.professional_board_id)
-					.then(() => {
-						handlePageChange({
-							page: 0,
-							pageSize: 5
-						});
-					})
-					.catch((err) => {
-						console.error(err);
-					});
-			},
-		[handlePageChange]
-	);
+	const handleRemoveVolunteerProfessionalBoard = (row: {
+		volunteer_id: number;
+		professional_board_id: number;
+		code: string;
+		professional_board: { id: number; name: string };
+	}) => {
+		setAnchorEl(null);
+		removeProfessionalBoard(row.volunteer_id, row.professional_board_id)
+			.then(() => {
+				handlePageChange({
+					page: 0,
+					pageSize: 5
+				});
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
 
 	const columns: GridColDef<(typeof professionalBoards.data)[number]>[] = [
 		{
@@ -176,7 +181,13 @@ export const VolunteerProfessionalBoard = ({
 							onClose={() => setAnchorEl(null)}
 						>
 							<MenuItem
-								onClick={handleRemoveVolunteerProfessionalBoard(params.row)}
+								onClick={() => {
+									setAnchorEl(null);
+									setOpenDeleteConfirmation({
+										open: true,
+										value: params.row
+									});
+								}}
 							>
 								{t('commons.delete')}
 							</MenuItem>
@@ -220,10 +231,25 @@ export const VolunteerProfessionalBoard = ({
 
 	return (
 		<>
+			<Typography variant="h6" component="h2" gutterBottom>
+				{t('VolunteerProfessionalBoard.title')}
+			</Typography>
+			<DialogConfirmation
+				currentState={{
+					open: openDeleteConfirmation.open,
+					value: openDeleteConfirmation.value
+				}}
+				model="delete"
+				onClose={(e) => {
+					setOpenDeleteConfirmation({
+						open: false
+					});
+					if (e) {
+						handleRemoveVolunteerProfessionalBoard(e);
+					}
+				}}
+			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Typography variant="h6" component="h2" gutterBottom>
-					{t('VolunteerProfessionalBoard.title')}
-				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBlock={2}>
 					<Grid item xs={6}>
 						<Controller
@@ -244,8 +270,7 @@ export const VolunteerProfessionalBoard = ({
 							)}
 						/>
 					</Grid>
-
-					<Grid item xs={3}>
+					<Grid item xs={6}>
 						<TextField
 							{...register('code')}
 							size="small"
@@ -254,6 +279,8 @@ export const VolunteerProfessionalBoard = ({
 							error={!!errors.code}
 						/>
 					</Grid>
+				</Grid>
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={3}>
 						<Button
 							type="submit"
@@ -265,41 +292,42 @@ export const VolunteerProfessionalBoard = ({
 						</Button>
 					</Grid>
 				</Grid>
-				<div style={{ height: 250, width: '100%' }}>
-					<DataGrid
-						rows={professionalBoards.data}
-						columns={columns}
-						disableColumnMenu={true}
-						columnVisibilityModel={{
-							professional_board: true,
-							code: width > 600 ? true : false,
-							actions: true
-						}}
-						loading={loading}
-						paginationMode="server"
-						rowCount={professionalBoards.total}
-						pageSizeOptions={[1, 10, 50]}
-						getRowId={(row) =>
-							row.volunteer_id.toString() + row.professional_board_id.toString()
-						}
-						disableRowSelectionOnClick
-						localeText={{
-							noRowsLabel: t('VoluntariosTable.noRowsLabel'),
-							MuiTablePagination: {
-								labelDisplayedRows
-							}
-						}}
-						onPaginationModelChange={(params) => {
-							handlePageChange({
-								page: params.page,
-								pageSize: params.pageSize
-							});
-						}}
-						slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-						sx={{ '--DataGrid-overlayHeight': '300px' }}
-					/>
-				</div>
 			</form>
+			<div style={{ height: 250 }}>
+				<DataGrid
+					rows={professionalBoards.data}
+					columns={columns}
+					disableColumnMenu
+					disableColumnSorting
+					columnVisibilityModel={{
+						professional_board: true,
+						code: width > 600 ? true : false,
+						actions: true
+					}}
+					loading={loading}
+					paginationMode="server"
+					rowCount={professionalBoards.total}
+					pageSizeOptions={[1, 10, 50]}
+					getRowId={(row) =>
+						row.volunteer_id.toString() + row.professional_board_id.toString()
+					}
+					disableRowSelectionOnClick
+					localeText={{
+						noRowsLabel: t('VoluntariosTable.noRowsLabel'),
+						MuiTablePagination: {
+							labelDisplayedRows
+						}
+					}}
+					onPaginationModelChange={(params) => {
+						handlePageChange({
+							page: params.page,
+							pageSize: params.pageSize
+						});
+					}}
+					slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+					sx={{ '--DataGrid-overlayHeight': '300px' }}
+				/>
+			</div>
 		</>
 	);
 };

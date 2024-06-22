@@ -26,6 +26,7 @@ import {
 } from '../../../services/volunteers/volunteer-vaccine-doses.service';
 import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
+import { DialogConfirmation } from '../../Commons/DialogConfirmation';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const vaccineSchema = z.object({
@@ -51,6 +52,14 @@ export const VolunteerVaccineDose = ({
 	volunteer
 }: VolunteerVaccineDoseProps) => {
 	const [loading, setLoading] = useState(false);
+	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
+		open: false,
+		value: undefined
+	} as {
+		open: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		value?: any;
+	});
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const { width } = useWindowDimensions();
 	const open = Boolean(anchorEl);
@@ -122,29 +131,25 @@ export const VolunteerVaccineDose = ({
 		[volunteer?.id]
 	);
 
-	const handleRemoveVolunteerVaccineDose = useCallback(
-		(row: {
-				id: number;
-				volunteer_id: number;
-				vaccine_id: number;
-				dose_number: number;
-				date_administered: string;
-			}) =>
-			() => {
-				setAnchorEl(null);
-				removeVolunteerVaccineDose(row.id)
-					.then(() => {
-						handlePageChange({
-							page: 0,
-							pageSize: 5
-						});
-					})
-					.catch((err) => {
-						console.error(err);
-					});
-			},
-		[handlePageChange]
-	);
+	const handleRemoveVolunteerVaccineDose = (row: {
+		id: number;
+		volunteer_id: number;
+		vaccine_id: number;
+		dose_number: number;
+		date_administered: string;
+	}) => {
+		setAnchorEl(null);
+		removeVolunteerVaccineDose(row.id)
+			.then(() => {
+				handlePageChange({
+					page: 0,
+					pageSize: 5
+				});
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
 
 	const columns: GridColDef<(typeof vaccines.data)[number]>[] = [
 		{
@@ -195,7 +200,15 @@ export const VolunteerVaccineDose = ({
 							open={open}
 							onClose={() => setAnchorEl(null)}
 						>
-							<MenuItem onClick={handleRemoveVolunteerVaccineDose(params.row)}>
+							<MenuItem
+								onClick={() => {
+									setAnchorEl(null);
+									setOpenDeleteConfirmation({
+										open: true,
+										value: params.row
+									});
+								}}
+							>
 								{t('commons.delete')}
 							</MenuItem>
 						</Menu>
@@ -244,6 +257,21 @@ export const VolunteerVaccineDose = ({
 			<Typography variant="h6" component="h2" gutterBottom>
 				{t('VolunteerVaccineDose.title')}
 			</Typography>
+			<DialogConfirmation
+				currentState={{
+					open: openDeleteConfirmation.open,
+					value: openDeleteConfirmation.value
+				}}
+				model="delete"
+				onClose={(e) => {
+					setOpenDeleteConfirmation({
+						open: false
+					});
+					if (e) {
+						handleRemoveVolunteerVaccineDose(e);
+					}
+				}}
+			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={5}>
@@ -318,7 +346,8 @@ export const VolunteerVaccineDose = ({
 				<DataGrid
 					rows={vaccines.data}
 					columns={columns}
-					disableColumnMenu={true}
+					disableColumnMenu
+					disableColumnSorting
 					columnVisibilityModel={{
 						vaccine: true,
 						dose_number: width > 600,

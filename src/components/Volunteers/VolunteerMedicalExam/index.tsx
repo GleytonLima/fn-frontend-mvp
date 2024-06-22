@@ -24,6 +24,7 @@ import {
 } from '../../../services/volunteers/volunteer-medical-exams.service';
 import BasicAutocomplete from '../../Commons/BasicAutocomplete';
 import CustomNoRowsOverlay from '../../Commons/CustomNoRowsOverlay';
+import { DialogConfirmation } from '../../Commons/DialogConfirmation';
 import { VolunteerSchema } from '../VolunteerForm';
 
 const medicalExamSchema = z.object({
@@ -51,11 +52,18 @@ export const VolunteerMedicalExam = ({
 	volunteer
 }: VolunteerMedicalExamProps) => {
 	const [loading, setLoading] = useState(false);
+	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
+		open: false,
+		value: undefined
+	} as {
+		open: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		value?: any;
+	});
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const {
 		handleSubmit,
-		getValues,
 		reset,
 		control,
 		formState: { isValid }
@@ -113,28 +121,24 @@ export const VolunteerMedicalExam = ({
 		[volunteer?.id]
 	);
 
-	const handleRemoveVolunteerMedicalExam = useCallback(
-		(row: {
-				id: number;
-				volunteer_id: number;
-				medical_exam_id: number;
-				exam_date: string;
-			}) =>
-			() => {
-				setAnchorEl(null);
-				removeVolunteerMedicalExam(row.id)
-					.then(() => {
-						handlePageChange({
-							page: 0,
-							pageSize: 5
-						});
-					})
-					.catch((err) => {
-						console.error(err);
-					});
-			},
-		[handlePageChange]
-	);
+	const handleRemoveVolunteerMedicalExam = (row: {
+		id: number;
+		volunteer_id: number;
+		medical_exam_id: number;
+		exam_date: string;
+	}) => {
+		setAnchorEl(null);
+		removeVolunteerMedicalExam(row.id)
+			.then(() => {
+				handlePageChange({
+					page: 0,
+					pageSize: 5
+				});
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
 
 	const columns: GridColDef<(typeof medicalExams.data)[number]>[] = [
 		{
@@ -177,7 +181,15 @@ export const VolunteerMedicalExam = ({
 							open={open}
 							onClose={() => setAnchorEl(null)}
 						>
-							<MenuItem onClick={handleRemoveVolunteerMedicalExam(params.row)}>
+							<MenuItem
+								onClick={() => {
+									setAnchorEl(null);
+									setOpenDeleteConfirmation({
+										open: true,
+										value: params.row
+									});
+								}}
+							>
 								{t('commons.delete')}
 							</MenuItem>
 						</Menu>
@@ -221,11 +233,25 @@ export const VolunteerMedicalExam = ({
 
 	return (
 		<>
-			<pre>{JSON.stringify(getValues, null, 2)}</pre>
+			<Typography variant="h6" component="h2" gutterBottom>
+				{t('VolunteerMedicalExam.title')}
+			</Typography>
+			<DialogConfirmation
+				currentState={{
+					open: openDeleteConfirmation.open,
+					value: openDeleteConfirmation.value
+				}}
+				model="delete"
+				onClose={(e) => {
+					setOpenDeleteConfirmation({
+						open: false
+					});
+					if (e) {
+						handleRemoveVolunteerMedicalExam(e);
+					}
+				}}
+			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Typography variant="h6" component="h2" gutterBottom>
-					{t('VolunteerMedicalExam.title')}
-				</Typography>
 				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={6}>
 						<Controller
@@ -246,7 +272,7 @@ export const VolunteerMedicalExam = ({
 							)}
 						/>
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={6}>
 						<Controller
 							name="exam_date"
 							control={control}
@@ -270,6 +296,8 @@ export const VolunteerMedicalExam = ({
 							)}
 						/>
 					</Grid>
+				</Grid>
+				<Grid container spacing={1} paddingTop={2} paddingBottom={2}>
 					<Grid item xs={3}>
 						<Button
 							type="submit"
@@ -281,38 +309,39 @@ export const VolunteerMedicalExam = ({
 						</Button>
 					</Grid>
 				</Grid>
-				<div style={{ height: 250, width: '100%' }}>
-					<DataGrid
-						rows={medicalExams.data}
-						columns={columns}
-						columnVisibilityModel={{
-							medical_exam: true,
-							exam_date: true,
-							actions: true
-						}}
-						disableColumnMenu={true}
-						loading={loading}
-						paginationMode="server"
-						rowCount={medicalExams.total}
-						pageSizeOptions={[1, 3, 10]}
-						disableRowSelectionOnClick
-						localeText={{
-							noRowsLabel: t('VolunteerMedicalExam.noRowsLabel'),
-							MuiTablePagination: {
-								labelDisplayedRows
-							}
-						}}
-						onPaginationModelChange={(params) => {
-							handlePageChange({
-								page: params.page,
-								pageSize: params.pageSize
-							});
-						}}
-						slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-						sx={{ '--DataGrid-overlayHeight': '300px' }}
-					/>
-				</div>
 			</form>
+			<div style={{ height: 250 }}>
+				<DataGrid
+					rows={medicalExams.data}
+					columns={columns}
+					columnVisibilityModel={{
+						medical_exam: true,
+						exam_date: true,
+						actions: true
+					}}
+					disableColumnMenu
+					disableColumnSorting
+					loading={loading}
+					paginationMode="server"
+					rowCount={medicalExams.total}
+					pageSizeOptions={[1, 3, 10]}
+					disableRowSelectionOnClick
+					localeText={{
+						noRowsLabel: t('VolunteerMedicalExam.noRowsLabel'),
+						MuiTablePagination: {
+							labelDisplayedRows
+						}
+					}}
+					onPaginationModelChange={(params) => {
+						handlePageChange({
+							page: params.page,
+							pageSize: params.pageSize
+						});
+					}}
+					slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+					sx={{ '--DataGrid-overlayHeight': '300px' }}
+				/>
+			</div>
 		</>
 	);
 };
