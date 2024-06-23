@@ -17,6 +17,7 @@ import { labelDisplayedRows } from '../../../models/pagination-translate';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ptBR } from '@mui/x-date-pickers/locales';
+import { useSnackbar } from 'notistack';
 import {
 	addVolunteerMedicalExam,
 	listVolunteerMedicalExams,
@@ -52,6 +53,7 @@ export const VolunteerMedicalExam = ({
 	volunteer
 }: VolunteerMedicalExamProps) => {
 	const [loading, setLoading] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
 	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
 		open: false,
 		value: undefined
@@ -134,9 +136,11 @@ export const VolunteerMedicalExam = ({
 					page: 0,
 					pageSize: 5
 				});
+				enqueueSnackbar(t('commons.deleteSuccess'), { variant: 'success' });
 			})
 			.catch((err) => {
 				console.error(err);
+				enqueueSnackbar(t('commons.deleteError'), { variant: 'error' });
 			});
 	};
 
@@ -212,6 +216,7 @@ export const VolunteerMedicalExam = ({
 			})
 				.then(() => {
 					reset();
+					enqueueSnackbar(t('commons.addSuccess'), { variant: 'success' });
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -219,6 +224,7 @@ export const VolunteerMedicalExam = ({
 				})
 				.catch((err) => {
 					console.error(err);
+					enqueueSnackbar(t('commons.addError'), { variant: 'error' });
 				});
 		},
 		[handlePageChange, volunteer?.id, reset]

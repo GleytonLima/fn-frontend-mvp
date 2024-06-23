@@ -9,6 +9,7 @@ import {
 	Typography
 } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
+import { useSnackbar } from 'notistack';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -49,6 +50,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		value?: any;
 	});
+	const { enqueueSnackbar } = useSnackbar();
 	const {
 		control,
 		reset,
@@ -121,6 +123,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 					page: 0,
 					pageSize: 5
 				});
+				enqueueSnackbar(t('commons.deleteSuccess'), { variant: 'success' });
 			})
 			.catch((err) => {
 				console.error(err);
@@ -186,6 +189,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 			addVolunteerDegree(volunteer.id, data.degree.id)
 				.then(() => {
 					reset();
+					enqueueSnackbar(t('commons.addSuccess'), { variant: 'success' });
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -193,6 +197,7 @@ export const VolunteerDegree = ({ volunteer }: VolunteerDegreeProps) => {
 				})
 				.catch((err) => {
 					console.error(err);
+					enqueueSnackbar(t('commons.addError'), { variant: 'error' });
 				});
 		},
 		[handlePageChange, volunteer?.id, reset]

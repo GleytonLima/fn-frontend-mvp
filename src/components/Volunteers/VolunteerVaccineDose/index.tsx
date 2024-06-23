@@ -18,6 +18,7 @@ import { labelDisplayedRows } from '../../../models/pagination-translate';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ptBR } from '@mui/x-date-pickers/locales';
+import { useSnackbar } from 'notistack';
 import useWindowDimensions from '../../../hooks/window-dimensions';
 import {
 	addVolunteerVaccineDose,
@@ -52,6 +53,7 @@ export const VolunteerVaccineDose = ({
 	volunteer
 }: VolunteerVaccineDoseProps) => {
 	const [loading, setLoading] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
 	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
 		open: false,
 		value: undefined
@@ -145,9 +147,11 @@ export const VolunteerVaccineDose = ({
 					page: 0,
 					pageSize: 5
 				});
+				enqueueSnackbar(t('commons.deleteSuccess'), { variant: 'success' });
 			})
 			.catch((err) => {
 				console.error(err);
+				enqueueSnackbar(t('commons.deleteError'), { variant: 'error' });
 			});
 	};
 
@@ -237,9 +241,11 @@ export const VolunteerVaccineDose = ({
 						page: 0,
 						pageSize: 5
 					});
+					enqueueSnackbar(t('commons.addSuccess'), { variant: 'success' });
 				})
 				.catch((err) => {
 					console.error(err);
+					enqueueSnackbar(t('commons.addError'), { variant: 'error' });
 				});
 		},
 		[handlePageChange, volunteer?.id, reset]

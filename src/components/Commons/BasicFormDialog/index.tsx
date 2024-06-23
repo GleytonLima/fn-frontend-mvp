@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
@@ -36,6 +35,7 @@ export default function BasicFormDialog() {
 				</Button>
 				<Dialog
 					open={open}
+					fullWidth
 					onClose={handleClose}
 					PaperProps={{
 						component: 'form',
@@ -51,23 +51,24 @@ export default function BasicFormDialog() {
 				>
 					<DialogTitle>{t('commons.add')}</DialogTitle>
 					<DialogContent>
-						<DialogContentText>
-							To create a new item, please fill the form below.
-						</DialogContentText>
 						<TextField
 							autoFocus
 							required
 							margin="dense"
 							id="name"
 							name="name"
-							label={t('commons.name')}
+							label={t('BasicTable.name')}
 							fullWidth
 							variant="standard"
 						/>
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={handleClose}>{t('commons.cancel')}</Button>
-						<Button type="submit">{t('commons.add')}</Button>
+						<Button onClick={handleClose} variant="contained" color="secondary">
+							{t('commons.cancel')}
+						</Button>
+						<Button type="submit" variant="contained" color="primary">
+							{t('commons.add')}
+						</Button>
 					</DialogActions>
 				</Dialog>
 			</Box>

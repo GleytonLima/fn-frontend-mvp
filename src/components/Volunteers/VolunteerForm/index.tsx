@@ -261,70 +261,78 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 			</form>
 			{volunteer?.id && (
 				<>
-					<br />
 					<Divider />
-					<VolunteerDegree
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
-					<br />
+					<Box mt={2} mb={2}>
+						<VolunteerDegree
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 					<Divider />
-					<VolunteerProfessionalBoard
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
-					<br />
+					<Box mt={2} mb={2}>
+						<VolunteerProfessionalBoard
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 					<Divider />
-					<VolunteerPostgraduateDegree
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
-					<br />
+					<Box mt={2} mb={2}>
+						<VolunteerPostgraduateDegree
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 					<Divider />
-					<VolunteerMedicalSpecialization
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
-					<br />
+					<Box mt={2} mb={2}>
+						<VolunteerMedicalSpecialization
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 					<Divider />
-					<VolunteerLanguage
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
-					<br />
+					<Box mt={2} mb={2}>
+						<VolunteerLanguage
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 					<Divider />
-					<VolunteerVaccineDose
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
-					<br />
+					<Box mt={2} mb={2}>
+						<VolunteerVaccineDose
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 					<Divider />
-					<VolunteerHealthStatus
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
-					<br />
+					<Box mt={2} mb={2}>
+						<VolunteerHealthStatus
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 					<Divider />
-					<VolunteerMedicalExam
-						volunteer={volunteer}
-						onSubmit={(e) => {
-							console.log(e);
-						}}
-					/>
+					<Box mt={2} mb={2}>
+						<VolunteerMedicalExam
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
 				</>
 			)}
 		</>
