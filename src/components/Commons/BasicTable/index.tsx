@@ -3,7 +3,7 @@ import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { BasicTable } from '../../../models/basic-table';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import { listBasicTableWithPagination } from '../../../services/basic-tables.service';
@@ -19,9 +19,8 @@ export const BasicTableComponent = () => {
 	const tableName = searchParams.get('tableName') || '';
 	const nameFilter = searchParams.get('name') || '';
 
-	const navigate = useNavigate();
 	const handleEdit = (id: number) => {
-		navigate(`/voluntarios/${id}/edit`);
+		console.log('Edit', id);
 	};
 
 	const handleClick = (event: MouseEvent<HTMLElement>) => {

@@ -10,6 +10,7 @@ import {
 	Typography
 } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
+import { useSnackbar } from 'notistack';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -49,6 +50,7 @@ export const VolunteerProfessionalBoard = ({
 	volunteer
 }: VolunteerProfessionalBoardProps) => {
 	const [loading, setLoading] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const { width } = useWindowDimensions();
@@ -133,9 +135,11 @@ export const VolunteerProfessionalBoard = ({
 					page: 0,
 					pageSize: 5
 				});
+				enqueueSnackbar(t('commons.deleteSuccess'), { variant: 'success' });
 			})
 			.catch((err) => {
 				console.error(err);
+				enqueueSnackbar(t('commons.deleteError'), { variant: 'error' });
 			});
 	};
 
@@ -214,9 +218,11 @@ export const VolunteerProfessionalBoard = ({
 						page: 0,
 						pageSize: 5
 					});
+					enqueueSnackbar(t('commons.addSuccess'), { variant: 'success' });
 				})
 				.catch((err) => {
 					console.error(err);
+					enqueueSnackbar(t('commons.addError'), { variant: 'error' });
 				});
 		},
 		[handlePageChange, volunteer?.id, reset]

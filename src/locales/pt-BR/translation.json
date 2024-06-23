@@ -5,6 +5,10 @@
 		"confirm": "Confirmar",
 		"deleteTitle": "Excluir",
 		"deleteMessage": "Tem certeza que deseja excluir este registro?",
+		"deleteSuccess": "Registro excluído com sucesso",
+		"addSuccess": "Registro adicionado com sucesso",
+		"deleteError": "Erro ao excluir registro",
+		"addError": "Erro ao adicionar registro",
 		"edit": "Editar",
 		"delete": "Excluir",
 		"remove": "Remover",
@@ -144,6 +148,7 @@
 		"title": "Equipamentos"
 	},
 	"BasicTable": {
+		"name": "Nome",
 		"degree": "Graduação",
 		"postgraduate_degree": "Pós-Graduação",
 		"noRowsLabel": "Nenhum registro encontrado"

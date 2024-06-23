@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useSnackbar } from 'notistack';
 import {
 	addVolunteerHealthStatus,
 	listVolunteerHealthStatuses,
@@ -50,6 +51,7 @@ export const VolunteerHealthStatus = ({
 	volunteer
 }: VolunteerHealthStatusProps) => {
 	const [loading, setLoading] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
 	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
 		open: false,
 		value: undefined
@@ -133,9 +135,11 @@ export const VolunteerHealthStatus = ({
 					page: 0,
 					pageSize: 5
 				});
+				enqueueSnackbar(t('commons.deleteSuccess'), { variant: 'success' });
 			})
 			.catch((err) => {
 				console.error(err);
+				enqueueSnackbar(t('commons.deleteError'), { variant: 'error' });
 			});
 	};
 
@@ -211,6 +215,7 @@ export const VolunteerHealthStatus = ({
 			})
 				.then(() => {
 					reset();
+					enqueueSnackbar(t('commons.addSuccess'), { variant: 'success' });
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -218,6 +223,7 @@ export const VolunteerHealthStatus = ({
 				})
 				.catch((err) => {
 					console.error(err);
+					enqueueSnackbar(t('commons.addError'), { variant: 'error' });
 				});
 		},
 		[handlePageChange, volunteer?.id, reset]

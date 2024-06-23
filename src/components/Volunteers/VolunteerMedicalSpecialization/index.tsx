@@ -9,6 +9,7 @@ import {
 	Typography
 } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
+import { useSnackbar } from 'notistack';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -44,6 +45,7 @@ export const VolunteerMedicalSpecialization = ({
 	volunteer
 }: VolunteerMedicalSpecializationProps) => {
 	const [loading, setLoading] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
 	const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState({
 		open: false,
 		value: undefined
@@ -124,9 +126,11 @@ export const VolunteerMedicalSpecialization = ({
 					page: 0,
 					pageSize: 5
 				});
+				enqueueSnackbar(t('commons.deleteSuccess'), { variant: 'success' });
 			})
 			.catch((err) => {
 				console.error(err);
+				enqueueSnackbar(t('commons.deleteError'), { variant: 'error' });
 			});
 	};
 
@@ -192,6 +196,7 @@ export const VolunteerMedicalSpecialization = ({
 			)
 				.then(() => {
 					reset();
+					enqueueSnackbar(t('commons.addSuccess'), { variant: 'success' });
 					handlePageChange({
 						page: 0,
 						pageSize: 5
@@ -199,6 +204,7 @@ export const VolunteerMedicalSpecialization = ({
 				})
 				.catch((err) => {
 					console.error(err);
+					enqueueSnackbar(t('commons.addError'), { variant: 'error' });
 				});
 		},
 		[handlePageChange, volunteer?.id, reset]
