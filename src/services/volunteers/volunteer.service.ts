@@ -1,9 +1,11 @@
 import { VolunteerSchema } from '../../components/Volunteers/VolunteerForm';
+import { SortParam } from '../../models/pagination';
 import api from '../api.config';
 
-export const listVolunteersByMissionType = async (pagination: {
+export const listVolunteers = async (pagination: {
 	limit: number;
 	offset: number;
+	sortingParams?: SortParam[];
 }) => {
 	try {
 		const queryParams = new URLSearchParams();
@@ -13,6 +15,11 @@ export const listVolunteersByMissionType = async (pagination: {
 			'expands',
 			'volunteer_degree,volunteer_postgraduate_degree,location'
 		);
+		if (pagination.sortingParams) {
+			pagination.sortingParams.forEach((sortItem) => {
+				queryParams.append('sort', `${sortItem.field},${sortItem.sort}`);
+			});
+		}
 		const response = await api.get(`/volunteers?${queryParams}`);
 		return response.data;
 	} catch (error) {

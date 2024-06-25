@@ -118,9 +118,6 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 
 	return (
 		<>
-			<Typography variant="h4" component="h2" gutterBottom>
-				{t('VolunteerForm.title')}
-			</Typography>
 			<Typography variant="h6" component="h2" gutterBottom>
 				{t('VolunteerForm.basicData')}
 			</Typography>
@@ -252,7 +249,7 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 									color="secondary"
 									onClick={() => navigate('/voluntarios')}
 								>
-									{t('commons.cancel')}
+									{volunteer?.id ? t('commons.back') : t('commons.cancel')}
 								</Button>
 							</Grid>
 						</Grid>

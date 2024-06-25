@@ -1,33 +1,34 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import {
+	DataGrid,
+	GridCallbackDetails,
+	GridColDef,
+	GridSortItem,
+	GridSortModel
+} from '@mui/x-data-grid';
+import { useSnackbar } from 'notistack';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useWindowDimensions from '../../../hooks/window-dimensions';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import { Volunteer } from '../../../models/volunteer';
-import { listVolunteersByMissionType } from '../../../services/volunteers/volunteer.service';
+import { listVolunteers } from '../../../services/volunteers/volunteer.service';
 
 export const VoluntariosTable = () => {
 	const [loading, setLoading] = useState(false);
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const open = Boolean(anchorEl);
+	const { enqueueSnackbar } = useSnackbar();
+	const [pageParams, setPageParams] = useState({ page: 0, pageSize: 5 });
+	const [sortParams, setSortParams] = useState<GridSortItem[]>([
+		{ field: 'full_name', sort: 'asc' }
+	]);
 	const { width } = useWindowDimensions();
 	const { t } = useTranslation();
 
 	const navigate = useNavigate();
 	const handleEdit = (id: number) => {
 		navigate(`/voluntarios/${id}/edit`);
-	};
-
-	const handleClick = (event: MouseEvent<HTMLElement>) => {
-		event.stopPropagation();
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
 	};
 	const [voluntarios, setVoluntarios] = useState<{
 		data: Volunteer[];
@@ -43,11 +44,43 @@ export const VoluntariosTable = () => {
 
 	const handlePageChange = (params: { page: number; pageSize: number }) => {
 		setLoading(true);
-		listVolunteersByMissionType({
+		setPageParams(params);
+		listVolunteers({
 			limit: params.pageSize,
-			offset: params.page
-		}).then((voluntarios) => {
-			setVoluntarios(voluntarios);
+			offset: params.page,
+			sortingParams: sortParams?.map((sort) => ({
+				field: sort.field,
+				sort: sort.sort === 'asc' ? 'asc' : 'desc'
+			}))
+		})
+			.then((voluntarios) => {
+				setVoluntarios(voluntarios);
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error(error);
+				setLoading(false);
+				enqueueSnackbar(`${t('commons.error')}: ${error}`, {
+					variant: 'error'
+				});
+			});
+	};
+
+	const handleSortChange = (
+		model: GridSortModel,
+		_: GridCallbackDetails<any>
+	) => {
+		setSortParams(model);
+		setLoading(true);
+		listVolunteers({
+			limit: pageParams.pageSize,
+			offset: pageParams.page,
+			sortingParams: model.map((sort) => ({
+				field: sort.field,
+				sort: sort.sort === 'asc' ? 'asc' : 'desc'
+			}))
+		}).then((results) => {
+			setVoluntarios(results);
 			setLoading(false);
 		});
 	};
@@ -68,11 +101,13 @@ export const VoluntariosTable = () => {
 		{
 			field: 'email',
 			headerName: t('Volunteer.email'),
+			sortable: false,
 			flex: 1
 		},
 		{
 			field: 'volunteer_degree',
 			headerName: t('Volunteer.degree'),
+			sortable: false,
 			flex: 1,
 			renderCell: (params) => {
 				return params.row.volunteer_degree
@@ -83,6 +118,7 @@ export const VoluntariosTable = () => {
 		{
 			field: 'location',
 			headerName: t('Volunteer.location'),
+			sortable: false,
 			flex: 1,
 			renderCell: (params) => {
 				return `${params.row.location?.name}${
@@ -95,8 +131,18 @@ export const VoluntariosTable = () => {
 		{
 			field: 'action',
 			headerName: t('commons.actions'),
+			sortable: false,
 			flex: 0.35,
 			renderCell: (params) => {
+				const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+				const open = Boolean(anchorEl);
+				const handleClick = (event: MouseEvent<HTMLElement>) => {
+					event.stopPropagation();
+					setAnchorEl(event.currentTarget);
+				};
+				const handleClose = () => {
+					setAnchorEl(null);
+				};
 				return (
 					<>
 						<IconButton
@@ -116,7 +162,6 @@ export const VoluntariosTable = () => {
 							<MenuItem onClick={() => handleEdit(params.row.id)}>
 								{t('commons.edit')}
 							</MenuItem>
-							<MenuItem onClick={handleClose}>{t('commons.delete')}</MenuItem>
 						</Menu>
 					</>
 				);
@@ -130,7 +175,7 @@ export const VoluntariosTable = () => {
 				<Typography variant="h5" component="h2">
 					{t('VoluntariosTable.title')}
 				</Typography>
-				<Box sx={{ height: 371, width: '100%' }}>
+				<Box sx={{ pb: 2, pt: 2, height: 371, width: '100%' }}>
 					<DataGrid
 						rows={voluntarios.data}
 						columns={columns}
@@ -142,13 +187,17 @@ export const VoluntariosTable = () => {
 							action: true
 						}}
 						disableColumnMenu
-						disableColumnSorting
 						disableColumnResize
 						loading={loading}
 						paginationMode="server"
+						sortingMode="server"
 						rowCount={voluntarios.total}
 						pageSizeOptions={[1, 10, 50]}
 						disableRowSelectionOnClick
+						initialState={{
+							pagination: { paginationModel: pageParams },
+							sorting: { sortModel: sortParams }
+						}}
 						localeText={{
 							noRowsLabel: t('VoluntariosTable.noRowsLabel'),
 							MuiTablePagination: {
@@ -156,6 +205,7 @@ export const VoluntariosTable = () => {
 							}
 						}}
 						onPaginationModelChange={handlePageChange}
+						onSortModelChange={handleSortChange}
 						onRowClick={(params) => {
 							handleEdit(params.row.id);
 						}}

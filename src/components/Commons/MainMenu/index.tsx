@@ -1,12 +1,17 @@
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import SchoolIcon from '@mui/icons-material/School';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import TranslateIcon from '@mui/icons-material/Translate';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import WorkIcon from '@mui/icons-material/Work';
 import { Collapse, Toolbar, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -16,6 +21,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 export interface TemporaryDrawerProps {
@@ -34,6 +40,7 @@ export default function TemporaryDrawer({
 	const [openComunicacao, setOpenComunicacao] = useState(false);
 	const [openMissoes, setOpenMissoes] = useState(false);
 	const [openBasicTables, setOpenBasicTables] = useState(false);
+	const { t } = useTranslation();
 
 	const handleClick = (menu: string) => {
 		switch (menu) {
@@ -133,7 +140,7 @@ export default function TemporaryDrawer({
 							<ListItemIcon>
 								<SchoolIcon />
 							</ListItemIcon>
-							<ListItemText primary="Graduações" />
+							<ListItemText primary={t('MainMenu.degrees')} />
 						</ListItemButton>
 					</List>
 					<List component="div" disablePadding>
@@ -146,7 +153,72 @@ export default function TemporaryDrawer({
 							<ListItemIcon>
 								<EngineeringIcon />
 							</ListItemIcon>
-							<ListItemText primary="Pós-graduações" />
+							<ListItemText primary={t('MainMenu.postgraduateDegrees')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=language"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<TranslateIcon />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.languages')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=medical_specialization"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<LocalHospitalIcon />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.medicalSpecializations')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=health_status"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<FavoriteIcon />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.healthStatuses')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=medical_exam"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<AssignmentIcon />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.medicalExams')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=professional_board"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<WorkIcon />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.professionalBoards')} />
 						</ListItemButton>
 					</List>
 				</Collapse>
