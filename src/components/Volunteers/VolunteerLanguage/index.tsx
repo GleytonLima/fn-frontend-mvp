@@ -106,6 +106,7 @@ export const VolunteerLanguage = ({ volunteer }: VolunteerLanguageProps) => {
 				.catch((err) => {
 					console.error(err);
 					setLoading(false);
+					enqueueSnackbar(t('commons.error'), { variant: 'error' });
 				});
 		},
 		[volunteer?.id]

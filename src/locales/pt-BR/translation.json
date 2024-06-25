@@ -2,6 +2,7 @@
 	"commons": {
 		"save": "Salvar",
 		"cancel": "Cancelar",
+		"back": "Voltar",
 		"confirm": "Confirmar",
 		"deleteTitle": "Excluir",
 		"deleteMessage": "Tem certeza que deseja excluir este registro?",
@@ -12,12 +13,13 @@
 		"edit": "Editar",
 		"delete": "Excluir",
 		"remove": "Remover",
+		"create": "Cadastrar",
 		"add": "Adicionar",
 		"close": "Fechar",
 		"search": "Pesquisar",
 		"yes": "Sim",
 		"no": "Não",
-		"error": "Erro",
+		"error": "Não foi possível realizar a operação",
 		"addField": "Adicionar Campo",
 		"removeField": "Remover Campo",
 		"addGroup": "Adicionar Grupo",
@@ -30,6 +32,17 @@
 			"moreThan": "mais de",
 			"rowsPerPage": "Linhas por página"
 		}
+	},
+	"MainMenu": {
+		"home": "Início",
+		"volunteers": "Voluntários",
+		"degrees": "Graduações",
+		"postgraduateDegrees": "Pós-Graduações",
+		"languages": "Idiomas",
+		"healthStatuses": "Status de Saúde",
+		"medicalExams": "Exames Médicos",
+		"professionalBoards": "Conselhos Profissionais",
+		"medicalSpecializations": "Especializações Médicas"
 	},
 	"BasicAutocomplete": {
 		"typeForMoreResults": "Digite para mais resultados..."
@@ -86,6 +99,14 @@
 		"medicalExam": "Exame Médico",
 		"professionalBoard": "Conselho Profissional",
 		"medicalSpecialization": "Especialização Médica"
+	},
+	"VoluntarioCreateEditPage": {
+		"createTitle": "Cadastrar Voluntário",
+		"editTitle": "Editar Voluntário",
+		"createSuccess": "Voluntário criado com sucesso",
+		"editSuccess": "Voluntário editado com sucesso",
+		"createError": "Erro ao criar voluntário",
+		"editError": "Erro ao editar voluntário"
 	},
 	"VolunteerDegree": {
 		"title": "Graduações",
@@ -149,11 +170,30 @@
 	},
 	"BasicTable": {
 		"name": "Nome",
+		"deleteTitle": "Excluir",
+		"deleteMessage": "Tem certeza que deseja excluir este registro: {{name}}?",
 		"degree": "Graduação",
 		"postgraduate_degree": "Pós-Graduação",
+		"language": "Idioma",
+		"medical_specialization": "Especialização Médica",
+		"health_status": "Status de Saúde",
+		"medical_exam": "Exame Médico",
+		"professional_board": "Conselho Profissional",
 		"noRowsLabel": "Nenhum registro encontrado"
+	},
+	"BasicTablesPage": {
+		"deleteSuccess": "Registro excluído com sucesso",
+		"deleteError": "Erro ao excluir registro"
 	},
 	"BasicTableFilterForm": {
 		"name": "Nome"
+	},
+	"BasicFormDialog": {
+		"createTitle": "Cadastrar",
+		"editTitle": "Editar",
+		"createSuccess": "Registro criado com sucesso",
+		"editSuccess": "Registro editado com sucesso",
+		"createError": "Erro ao criar registro",
+		"editError": "Erro ao editar registro"
 	}
 }

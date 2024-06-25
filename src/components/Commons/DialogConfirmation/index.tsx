@@ -7,12 +7,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useTranslation } from 'react-i18next';
 
 export interface DialogConfirmationProps {
-	title?: string;
-	message?: string;
 	currentState: {
 		open: boolean;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		value: any;
+		title?: string;
+		message?: string;
 	};
 	model?: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,7 +20,7 @@ export interface DialogConfirmationProps {
 }
 
 export const DialogConfirmation = (props: DialogConfirmationProps) => {
-	const { onClose, currentState, title, message, model, ...other } = props;
+	const { onClose, currentState, model, ...other } = props;
 	const { t } = useTranslation();
 
 	const modelMessages: Record<
@@ -44,10 +44,12 @@ export const DialogConfirmation = (props: DialogConfirmationProps) => {
 
 	return (
 		<Dialog maxWidth="xs" open={currentState.open} {...other}>
-			<DialogTitle>{model ? modelMessages[model].title : title}</DialogTitle>
+			<DialogTitle>
+				{model ? modelMessages[model].title : currentState.title}
+			</DialogTitle>
 			<DialogContent dividers>
 				<Typography variant="body1">
-					{model ? modelMessages[model].message : message}
+					{model ? modelMessages[model].message : currentState.message}
 				</Typography>
 			</DialogContent>
 			<DialogActions>

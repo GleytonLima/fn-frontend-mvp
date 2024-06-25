@@ -1,4 +1,4 @@
 export type BasicTable = {
-	id: number;
+	id?: number;
 	name: string;
 };
