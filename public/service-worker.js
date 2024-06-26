@@ -3,8 +3,8 @@ console.log('Service Worker Loaded...');
 self.addEventListener('push', e => {
   const data = e.data;
   console.log('Push Recieved...');
-  self.registration.showNotification("Teste", {
+  self.registration.showNotification("Nova Mensagem", {
     body: e.data.text(),
-    icon: 'http://image.ibb.co/frYOFd/tmlogo.png'
+    icon: 'https://ibb.co/vLhPyxh'
   });
 });
