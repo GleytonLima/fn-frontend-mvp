@@ -5,6 +5,6 @@ self.addEventListener('push', e => {
   console.log('Push Recieved...');
   self.registration.showNotification("Nova Mensagem", {
     body: e.data.text(),
-    icon: 'https://i.ibb.co/L9rtjzr/fnsus-icon.png'
+    icon: 'https://i.ibb.co/6YYBrNc/fnsus-icon.png'
   });
 });
