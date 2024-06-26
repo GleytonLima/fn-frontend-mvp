@@ -40,6 +40,7 @@ export default function TemporaryDrawer({
 	const [openComunicacao, setOpenComunicacao] = useState(false);
 	const [openMissoes, setOpenMissoes] = useState(false);
 	const [openBasicTables, setOpenBasicTables] = useState(false);
+	const [openVolunteerArea, setOpenVolunteerArea] = useState(false);
 	const { t } = useTranslation();
 
 	const handleClick = (menu: string) => {
@@ -62,6 +63,9 @@ export default function TemporaryDrawer({
 			case 'basic-tables':
 				setOpenBasicTables(!openBasicTables);
 				break;
+			case 'volunteer-area':
+				setOpenVolunteerArea(!openVolunteerArea);
+				break;
 			default:
 				break;
 		}
@@ -78,6 +82,12 @@ export default function TemporaryDrawer({
 			</Toolbar>
 			<Divider />
 			<List>
+				<ListItemButton component={Link} to="/volunteer-area">
+					<ListItemIcon>
+						<VolunteerActivismIcon />
+					</ListItemIcon>
+					<ListItemText primary="Área do Voluntário" />
+				</ListItemButton>
 				<ListItemButton onClick={() => handleClick('missoes')}>
 					<ListItemIcon>
 						<FlightTakeoffIcon />

@@ -17,6 +17,7 @@ import MissionViewPage from './pages/Mission/index.tsx';
 import { MissaoDashboardPage } from './pages/MissionDashboard/index.tsx';
 import { MissionsPage } from './pages/Missions/index.tsx';
 import FilterBuilderTestPage from './pages/Test/index.tsx';
+import { VolunteerAreaPage } from './pages/VolunteerArea/index.tsx';
 import { VoluntarioCreateEditPage } from './pages/VolunteerCreateEdit/index.tsx';
 import { VoluntariosPage } from './pages/Volunteers/index.tsx';
 
@@ -66,6 +67,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 					<Route path="/teste" element={<FilterBuilderTestPage />}></Route>
 					<Route path="/voluntarios" element={<VoluntariosPage />}></Route>
 					<Route path="/basic-tables" element={<BasicTablesPage />}></Route>
+					<Route path="/volunteer-area" element={<VolunteerAreaPage />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</SnackbarProvider>

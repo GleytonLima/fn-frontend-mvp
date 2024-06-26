@@ -5,14 +5,19 @@ import MissionConfigCard from '../../components/Missions/MissionConfigCard';
 
 const MissionViewPage: React.FC = () => {
 	const configs = [
-		{ title: 'Voluntários', imageUrl: 'https://via.placeholder.com/150' },
-		{ title: 'Atendimentos', imageUrl: 'https://via.placeholder.com/150' },
-		{ title: 'Operações', imageUrl: 'https://via.placeholder.com/150' },
-		{ title: 'Abrigos', imageUrl: 'https://via.placeholder.com/150' },
-		{ title: 'Doações', imageUrl: 'https://via.placeholder.com/150' },
-		{ title: 'Recursos', imageUrl: 'https://via.placeholder.com/150' },
-		{ title: 'Integrações', imageUrl: 'https://via.placeholder.com/150' }
+		{ id: 'team', title: 'Equipes', imageUrl: '/images/team.png' },
+		{ id: 'task', title: 'Tarefas', imageUrl: '/images/tasks.png' },
+		{
+			id: 'communction',
+			title: 'Comunicações',
+			imageUrl: '/images/communications.png'
+		},
+		{ id: 'report', title: 'Relatórios', imageUrl: '/images/reports.png' }
 	];
+
+	const handleSelection = (id: string) => {
+		console.log(id);
+	};
 
 	return (
 		<>
@@ -26,10 +31,12 @@ const MissionViewPage: React.FC = () => {
 				</Grid>
 				<Grid container spacing={2} justifyContent="center">
 					{configs.map((config) => (
-						<Grid item xs={12} sm={6} key={config.title}>
+						<Grid item xs={6} sm={3} key={config.title}>
 							<MissionConfigCard
+								id={config.id}
 								title={config.title}
 								imageUrl={config.imageUrl}
+								onClick={handleSelection}
 							/>
 						</Grid>
 					))}
