@@ -42,10 +42,14 @@
 		"healthStatuses": "Status de Saúde",
 		"medicalExams": "Exames Médicos",
 		"professionalBoards": "Conselhos Profissionais",
-		"medicalSpecializations": "Especializações Médicas"
+		"medicalSpecializations": "Especializações Médicas",
+		"trainingTypes": "Tipos de Treinamento",
+		"trainingAreas": "Áreas de Treinamento",
+		"trainings": "Treinamentos"
 	},
 	"BasicAutocomplete": {
-		"typeForMoreResults": "Digite para mais resultados..."
+		"typeForMoreResults": "Digite para mais resultados...",
+		"invalidValue": "Valor inválido"
 	},
 	"FilterGroup": {
 		"language": "Idioma",
@@ -98,7 +102,8 @@
 		"health_status": "Status de Saúde",
 		"medicalExam": "Exame Médico",
 		"professionalBoard": "Conselho Profissional",
-		"medicalSpecialization": "Especialização Médica"
+		"medicalSpecialization": "Especialização Médica",
+		"training": "Treinamento"
 	},
 	"VoluntarioCreateEditPage": {
 		"createTitle": "Cadastrar Voluntário",
@@ -108,9 +113,25 @@
 		"createError": "Erro ao criar voluntário",
 		"editError": "Erro ao editar voluntário"
 	},
+	"TrainingCreateEditPage": {
+		"createTitle": "Cadastrar Treinamento",
+		"editTitle": "Editar Treinamento",
+		"createSuccess": "Treinamento criado com sucesso",
+		"editSuccess": "Treinamento editado com sucesso",
+		"createError": "Erro ao criar treinamento",
+		"editError": "Erro ao editar treinamento",
+		"deleteSuccess": "Treinamento excluído com sucesso",
+		"deleteError": "Erro ao excluir treinamento"
+	},
 	"VolunteerDegree": {
 		"title": "Graduações",
 		"noRowsLabel": "Nenhuma graduação encontrada"
+	},
+	"VolunteerTraining": {
+		"title": "Treinamentos",
+		"training": "Treinamento",
+		"date": "Data",
+		"noRowsLabel": "Nenhum treinamento encontrado"
 	},
 	"VolunteerPostgraduateDegree": {
 		"title": "Pós-Graduações",
@@ -179,6 +200,8 @@
 		"health_status": "Status de Saúde",
 		"medical_exam": "Exame Médico",
 		"professional_board": "Conselho Profissional",
+		"training_type": "Tipo de Treinamento",
+		"training_area": "Área de Treinamento",
 		"noRowsLabel": "Nenhum registro encontrado"
 	},
 	"BasicTablesPage": {
@@ -194,6 +217,52 @@
 		"createSuccess": "Registro criado com sucesso",
 		"editSuccess": "Registro editado com sucesso",
 		"createError": "Erro ao criar registro",
-		"editError": "Erro ao editar registro"
+		"editError": "Erro ao editar registro",
+		"deleteSuccess": "Registro excluído com sucesso",
+		"deleteError": "Erro ao excluir registro"
+	},
+	"Training": {
+		"name": "Nome",
+		"area": "Área",
+		"description": "Descrição",
+		"detailsLink": "Link para Detalhes",
+		"trainingType": "Tipo de Treinamento",
+		"date": "Data",
+		"noRowsLabel": "Nenhum treinamento encontrado"
+	},
+	"TrainingTable": {
+		"title": "Treinamentos"
+	},
+	"TrainingForm": {
+		"title": "Treinamento",
+		"basicData": "Dados Básicos",
+		"invalidName": "Nome inválido",
+		"invalidDescription": "Descrição inválida",
+		"invalidResumeLink": "Link para Detalhes inválido"
+	},
+	"TrainingArea": {
+		"title": "Áreas de Treinamento",
+		"noRowsLabel": "Nenhuma área de treinamento encontrada"
+	},
+	"Team": {
+		"name": "Nome",
+		"description": "Descrição"
+	},
+	"TeamTable": {
+		"title": "Equipes"
+	},
+	"TeamForm": {
+		"title": "Equipe",
+		"basicData": "Dados Básicos",
+		"invalidName": "Nome inválido",
+		"invalidDescription": "Descrição inválida"
+	},
+	"TeamCreateEditPage": {
+		"createTitle": "Cadastrar Equipe",
+		"editTitle": "Editar Equipe",
+		"createSuccess": "Equipe criada com sucesso",
+		"editSuccess": "Equipe editada com sucesso",
+		"createError": "Erro ao criar equipe",
+		"editError": "Erro ao editar equipe"
 	}
 }

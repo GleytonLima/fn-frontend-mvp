@@ -1,4 +1,12 @@
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import {
+	AccountCircle,
+	Assignment,
+	Business,
+	Category,
+	ExpandLess,
+	ExpandMore,
+	Group
+} from '@mui/icons-material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
@@ -130,6 +138,22 @@ export default function TemporaryDrawer({
 							</ListItemIcon>
 							<ListItemText primary="Cadastro de Voluntários" />
 						</ListItemButton>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/volunteer-profiles"
+						>
+							<ListItemIcon>
+								<AccountCircle />
+							</ListItemIcon>
+							<ListItemText primary="Perfis de Voluntário" />
+						</ListItemButton>
+						<ListItemButton sx={{ pl: 4 }} component={Link} to="/teams">
+							<ListItemIcon>
+								<Group />
+							</ListItemIcon>
+							<ListItemText primary="Equipes" />
+						</ListItemButton>
 					</List>
 				</Collapse>
 				<ListItemButton onClick={() => handleClick('basic-tables')}>
@@ -229,6 +253,45 @@ export default function TemporaryDrawer({
 								<WorkIcon />
 							</ListItemIcon>
 							<ListItemText primary={t('MainMenu.professionalBoards')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=training_type"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<Category />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.trainingTypes')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/basic-tables?tableName=training_area"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<Business />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.trainingAreas')} />
+						</ListItemButton>
+					</List>
+					<List component="div" disablePadding>
+						<ListItemButton
+							sx={{ pl: 4 }}
+							component={Link}
+							to="/trainings"
+							onClick={toggleDrawer(false)}
+						>
+							<ListItemIcon>
+								<Assignment />
+							</ListItemIcon>
+							<ListItemText primary={t('MainMenu.trainings')} />
 						</ListItemButton>
 					</List>
 				</Collapse>

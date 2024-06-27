@@ -27,6 +27,7 @@ import { VolunteerMedicalExam } from '../VolunteerMedicalExam';
 import { VolunteerMedicalSpecialization } from '../VolunteerMedicalSpecialization';
 import { VolunteerPostgraduateDegree } from '../VolunteerPostgraduateDegree';
 import { VolunteerProfessionalBoard } from '../VolunteerProfessionalBoard';
+import { VolunteerTraining } from '../VolunteerTraining';
 import { VolunteerVaccineDose } from '../VolunteerVaccineDose';
 
 const locationSchema = z.object({
@@ -279,6 +280,15 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 					<Divider />
 					<Box mt={2} mb={2}>
 						<VolunteerPostgraduateDegree
+							volunteer={volunteer}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
+					<Divider />
+					<Box mt={2} mb={2}>
+						<VolunteerTraining
 							volunteer={volunteer}
 							onSubmit={(e) => {
 								console.log(e);

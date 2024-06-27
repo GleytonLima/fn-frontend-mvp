@@ -36,7 +36,7 @@ export const VolunteerAreaPage = () => {
 			id: 1,
 			title: 'Atualização da Missão 05/2024',
 			message:
-				'Informamos que a distribuição de alimentos será realizada no próximo sábado, às 10h, no centro comunitário. Fiquem atentos às tarefas atribuídas!',
+				'Informamos que a reunião geral da missão será feita na base central amanhã às 10h. Não se atrase',
 			dateTime: '2024-07-01T09:00:00',
 			communicationType: 'mission'
 		},
@@ -92,8 +92,8 @@ export const VolunteerAreaPage = () => {
 			teamId: 1,
 			teamName: 'Equipe de Logística',
 			specificObjectives:
-				'Organizar a distribuição de alimentos para 100 famílias carentes.',
-			location: 'Centro Comunitário do Bairro X',
+				'Organizar a distribuição de alimentos para 100 famílias na região afetada.',
+			location: 'Centro Comunitário do Bairro Sarandi',
 			messagingPlatformLink: 'https://chat.whatsapp.com/ClxcIs8oopsEzVFQrUDsfN'
 		}
 	];

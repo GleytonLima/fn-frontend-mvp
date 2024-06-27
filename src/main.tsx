@@ -16,7 +16,11 @@ import { BasicTablesPage } from './pages/BasicTables/index.tsx';
 import MissionViewPage from './pages/Mission/index.tsx';
 import { MissaoDashboardPage } from './pages/MissionDashboard/index.tsx';
 import { MissionsPage } from './pages/Missions/index.tsx';
+import { TeamCreateEditPage } from './pages/TeamCreateEdit/index.tsx';
+import { TeamsPage } from './pages/Teams/index.tsx';
 import FilterBuilderTestPage from './pages/Test/index.tsx';
+import { TrainingCreateEditPage } from './pages/TrainingCreateEdit/index.tsx';
+import { TrainingsPage } from './pages/Trainings/index.tsx';
 import { VolunteerAreaPage } from './pages/VolunteerArea/index.tsx';
 import { VoluntarioCreateEditPage } from './pages/VolunteerCreateEdit/index.tsx';
 import { VoluntariosPage } from './pages/Volunteers/index.tsx';
@@ -68,6 +72,21 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 					<Route path="/voluntarios" element={<VoluntariosPage />}></Route>
 					<Route path="/basic-tables" element={<BasicTablesPage />}></Route>
 					<Route path="/volunteer-area" element={<VolunteerAreaPage />}></Route>
+					<Route
+						path="/trainings/create"
+						element={<TrainingCreateEditPage />}
+					></Route>
+					<Route
+						path="/trainings/:id/edit"
+						element={<TrainingCreateEditPage />}
+					></Route>
+					<Route path="/trainings" element={<TrainingsPage />}></Route>
+					<Route path="/teams/create" element={<TeamCreateEditPage />}></Route>
+					<Route
+						path="/teams/:id/edit"
+						element={<TeamCreateEditPage />}
+					></Route>
+					<Route path="/teams" element={<TeamsPage />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</SnackbarProvider>

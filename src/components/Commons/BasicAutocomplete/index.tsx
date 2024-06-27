@@ -15,17 +15,17 @@ interface BasicAutocompleteProps {
 	defaultValue?: BasicTable | null;
 	config: { label: string; placeholder: string };
 	onChange: (field: BasicTable | null) => void;
+	error?: boolean;
 }
 
 const DEBOUNCE_DELAY = 500;
 
 const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 	(props, ref) => {
-		const { tableName, defaultValue, config, onChange } = props;
+		const { tableName, defaultValue, config, onChange, error } = props;
 		const [options, setOptions] = useState<{ id: number; name: string }[]>([]);
 		const [inputValue, setInputValue] = useState('');
 		const [loading, setLoading] = useState(false);
-		const [error, setError] = useState(false);
 		const { t } = useTranslation();
 
 		const DEFAULT_OPTION = useMemo(
@@ -39,7 +39,6 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 		const fetchOptions = useCallback(
 			async (newValue: string) => {
 				setLoading(true);
-				setError(false);
 				try {
 					const newOptions = await listBasicTable({
 						tableName,
@@ -50,7 +49,7 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 					newOptions.push(DEFAULT_OPTION);
 					setOptions(newOptions);
 				} catch (err) {
-					setError(true);
+					console.error(err);
 				} finally {
 					setLoading(false);
 				}
@@ -96,7 +95,7 @@ const BasicAutocomplete: React.FC<BasicAutocompleteProps> = React.forwardRef(
 							label={config.label}
 							placeholder={config.placeholder}
 							error={error}
-							helperText={error ? t('BasicAutocomplete.errorMessage') : ''}
+							helperText={error ? t('BasicAutocomplete.invalidValue') : ''}
 							InputProps={{
 								...params.InputProps,
 								endAdornment: (
