@@ -42,6 +42,9 @@ const FilterGroup: React.FC<FilterGroupProps> = ({
 	};
 
 	const handleAddGroup = () => {
+		if (!group.filters?.length) {
+			return;
+		}
 		setIsAddingFilter(true);
 		onChange({
 			...group,
@@ -95,7 +98,7 @@ const FilterGroup: React.FC<FilterGroupProps> = ({
 				</Select>
 			</FormControl>
 
-			{group.filters.map((filter, index) => (
+			{group.filters?.map((filter, index) => (
 				<div key={index}>
 					{filter?.operator == 'AND' || filter?.operator == 'OR' ? (
 						<FilterGroup
@@ -118,7 +121,8 @@ const FilterGroup: React.FC<FilterGroupProps> = ({
 								{
 									key: 'medical_specialization',
 									value: t('FilterGroup.medical_specialization')
-								}
+								},
+								{ key: 'training', value: t('FilterGroup.training') }
 							]}
 						/>
 					)}

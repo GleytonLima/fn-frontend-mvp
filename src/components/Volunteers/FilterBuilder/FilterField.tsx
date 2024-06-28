@@ -146,14 +146,6 @@ const FilterField: React.FC<FilterFieldProps> = ({
 					onChange={handleValueChange}
 					onInputChange={handleInputChange}
 					inputValue={inputValue}
-					renderOption={(optionProps, option) => {
-						const { ...otherProps } = optionProps;
-						return option.id === -1 ? (
-							<em {...otherProps}>{option.name}</em>
-						) : (
-							<li {...otherProps}>{option.name}</li>
-						);
-					}}
 					getOptionDisabled={(option) => option.id === -1}
 					getOptionLabel={(option) => option.name}
 					filterSelectedOptions

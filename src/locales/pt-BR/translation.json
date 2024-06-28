@@ -60,7 +60,8 @@
 		"placeholder": "Selecione um valor",
 		"groupOperator": "Operador do Grupo",
 		"groupOperatorHint": "Selecione o tipo de grupo: E ou OU",
-		"field": "Atributo"
+		"field": "Atributo",
+		"training": "Treinamento"
 	},
 	"SupplyMedicineDetails": {
 		"title": "Insumo/Medicamento"
@@ -264,5 +265,33 @@
 		"editSuccess": "Equipe editada com sucesso",
 		"createError": "Erro ao criar equipe",
 		"editError": "Erro ao editar equipe"
+	},
+	"VolunteerProfileCreateEditPage": {
+		"createTitle": "Cadastrar Perfil de Voluntário",
+		"editTitle": "Editar Perfil de Voluntário",
+		"createSuccess": "Perfil de voluntário criado com sucesso",
+		"editSuccess": "Perfil de voluntário editado com sucesso",
+		"createError": "Erro ao criar perfil de voluntário",
+		"editError": "Erro ao editar perfil de voluntário",
+		"deleteSuccess": "Perfil de voluntário excluído com sucesso",
+		"deleteError": "Erro ao excluir perfil de voluntário"
+	},
+	"VolunteerProfileForm": {
+		"title": "Perfil de Voluntário",
+		"basicData": "Dados Básicos",
+		"filter": "Características do Perfil",
+		"invalidName": "Nome inválido",
+		"invalidDescription": "Descrição inválida"
+	},
+	"VolunteerProfile": {
+		"name": "Nome",
+		"description": "Descrição",
+		"profileFilter": "Filtro de Perfil"
+	},
+	"VolunteerProfileTable": {
+		"title": "Perfis de Voluntário"
+	},
+	"FilterBuilder": {
+		"saveFilter": "Salvar Características"
 	}
 }

@@ -18,11 +18,12 @@ import { MissaoDashboardPage } from './pages/MissionDashboard/index.tsx';
 import { MissionsPage } from './pages/Missions/index.tsx';
 import { TeamCreateEditPage } from './pages/TeamCreateEdit/index.tsx';
 import { TeamsPage } from './pages/Teams/index.tsx';
-import FilterBuilderTestPage from './pages/Test/index.tsx';
 import { TrainingCreateEditPage } from './pages/TrainingCreateEdit/index.tsx';
 import { TrainingsPage } from './pages/Trainings/index.tsx';
 import { VolunteerAreaPage } from './pages/VolunteerArea/index.tsx';
 import { VoluntarioCreateEditPage } from './pages/VolunteerCreateEdit/index.tsx';
+import { VolunteerProfileCreateEditPage } from './pages/VolunteerProfileCreateEdit/index.tsx';
+import { VolunteerProfilesPage } from './pages/VolunteerProfiles/index.tsx';
 import { VoluntariosPage } from './pages/Volunteers/index.tsx';
 
 configureI18n();
@@ -68,7 +69,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 						path="/voluntarios/:id/edit"
 						element={<VoluntarioCreateEditPage />}
 					></Route>
-					<Route path="/teste" element={<FilterBuilderTestPage />}></Route>
 					<Route path="/voluntarios" element={<VoluntariosPage />}></Route>
 					<Route path="/basic-tables" element={<BasicTablesPage />}></Route>
 					<Route path="/volunteer-area" element={<VolunteerAreaPage />}></Route>
@@ -86,7 +86,19 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 						path="/teams/:id/edit"
 						element={<TeamCreateEditPage />}
 					></Route>
-					<Route path="/teams" element={<TeamsPage />}></Route>
+					<Route path="/volunteer-profile" element={<TeamsPage />}></Route>
+					<Route
+						path="/volunteer-profiles/create"
+						element={<VolunteerProfileCreateEditPage />}
+					></Route>
+					<Route
+						path="/volunteer-profiles/:id/edit"
+						element={<VolunteerProfileCreateEditPage />}
+					></Route>
+					<Route
+						path="/volunteer-profiles"
+						element={<VolunteerProfilesPage />}
+					></Route>
 				</Routes>
 			</BrowserRouter>
 		</SnackbarProvider>
