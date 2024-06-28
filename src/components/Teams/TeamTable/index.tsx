@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useWindowDimensions from '../../../hooks/window-dimensions';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
-import { listTeams } from '../../../services/team.service';
+import { listTeams } from '../../../services/teams/team.service';
 import { TeamSchema } from '../TeamForm';
 export const TeamTable = () => {
 	const [loading, setLoading] = useState(false);

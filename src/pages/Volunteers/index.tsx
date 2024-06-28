@@ -5,13 +5,16 @@ import { VoluntariosTable } from '../../components/Volunteers/VolunteerTable';
 
 export const VoluntariosPage = () => {
 	const navigate = useNavigate();
+	const handleEdit = (id: number) => {
+		navigate(`/voluntarios/${id}/edit`);
+	};
 	return (
 		<>
 			<MainBar />
-			<VoluntariosTable />
-			<Box component="section" sx={{ p: 2 }}>
+			<VoluntariosTable handleSelect={handleEdit} />
+			<Box>
 				<Grid item xs={12}>
-					<Box display="flex" justifyContent="center" gap="20px">
+					<Box display="flex" justifyContent="center">
 						<Button
 							variant="contained"
 							color="primary"

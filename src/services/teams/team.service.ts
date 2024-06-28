@@ -1,6 +1,6 @@
-import { TeamSchema } from '../components/Teams/TeamForm';
-import { SortParam } from '../models/pagination';
-import api from './api.config';
+import { TeamSchema } from '../../components/Teams/TeamForm';
+import { SortParam } from '../../models/pagination';
+import api from '../api.config';
 
 export const listTeams = async (pagination: {
 	limit: number;

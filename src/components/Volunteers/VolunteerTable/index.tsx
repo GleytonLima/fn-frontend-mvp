@@ -10,26 +10,27 @@ import {
 import { useSnackbar } from 'notistack';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import useWindowDimensions from '../../../hooks/window-dimensions';
+import { QueryParam } from '../../../models/pagination';
 import { labelDisplayedRows } from '../../../models/pagination-translate';
 import { Volunteer } from '../../../models/volunteer';
 import { listVolunteers } from '../../../services/volunteers/volunteer.service';
+import { VoluntariosFilterForm } from '../VolunteerFilterForm';
 
-export const VoluntariosTable = () => {
+export const VoluntariosTable = ({
+	handleSelect
+}: {
+	handleSelect: (id: number) => void;
+}) => {
 	const [loading, setLoading] = useState(false);
 	const { enqueueSnackbar } = useSnackbar();
 	const [pageParams, setPageParams] = useState({ page: 0, pageSize: 5 });
 	const [sortParams, setSortParams] = useState<GridSortItem[]>([
-		{ field: 'full_name', sort: 'asc' }
+		{ field: 'name', sort: 'asc' }
 	]);
 	const { width } = useWindowDimensions();
 	const { t } = useTranslation();
 
-	const navigate = useNavigate();
-	const handleEdit = (id: number) => {
-		navigate(`/voluntarios/${id}/edit`);
-	};
 	const [voluntarios, setVoluntarios] = useState<{
 		data: Volunteer[];
 		limit: number;
@@ -52,6 +53,45 @@ export const VoluntariosTable = () => {
 				field: sort.field,
 				sort: sort.sort === 'asc' ? 'asc' : 'desc'
 			}))
+		})
+			.then((voluntarios) => {
+				setVoluntarios(voluntarios);
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error(error);
+				setLoading(false);
+				enqueueSnackbar(`${t('commons.error')}: ${error}`, {
+					variant: 'error'
+				});
+			});
+	};
+
+	const handleFilterChange = (filterParams: {
+		volunteerProfiles?: QueryParam[] | null | undefined;
+		nome?: string | undefined;
+	}) => {
+		const queryParams: QueryParam[] = [];
+		if (filterParams.nome) {
+			queryParams.push({ field: 'name', value: filterParams.nome });
+		}
+		if (filterParams.volunteerProfiles) {
+			queryParams.push({
+				field: 'volunteer_profile_id',
+				value: filterParams.volunteerProfiles
+					?.map((profile) => profile.value)
+					.join(',')
+			});
+		}
+		setLoading(true);
+		listVolunteers({
+			limit: pageParams.pageSize,
+			offset: pageParams.page,
+			sortingParams: sortParams?.map((sort) => ({
+				field: sort.field,
+				sort: sort.sort === 'asc' ? 'asc' : 'desc'
+			})),
+			queryParams
 		})
 			.then((voluntarios) => {
 				setVoluntarios(voluntarios);
@@ -94,7 +134,7 @@ export const VoluntariosTable = () => {
 
 	const columns: GridColDef<(typeof voluntarios.data)[number]>[] = [
 		{
-			field: 'full_name',
+			field: 'name',
 			headerName: t('Volunteer.name'),
 			flex: 1
 		},
@@ -112,6 +152,17 @@ export const VoluntariosTable = () => {
 			renderCell: (params) => {
 				return params.row.volunteer_degree
 					.map((degree) => degree.degree.name)
+					.join(', ');
+			}
+		},
+		{
+			field: 'volunteer_language',
+			headerName: t('Volunteer.language'),
+			sortable: false,
+			flex: 1,
+			renderCell: (params) => {
+				return params.row.volunteer_language
+					.map((language) => language.language.name)
 					.join(', ');
 			}
 		},
@@ -159,7 +210,7 @@ export const VoluntariosTable = () => {
 							open={open}
 							onClose={handleClose}
 						>
-							<MenuItem onClick={() => handleEdit(params.row.id)}>
+							<MenuItem onClick={() => handleSelect(params.row.id)}>
 								{t('commons.edit')}
 							</MenuItem>
 						</Menu>
@@ -175,14 +226,16 @@ export const VoluntariosTable = () => {
 				<Typography variant="h5" component="h2">
 					{t('VoluntariosTable.title')}
 				</Typography>
+				<VoluntariosFilterForm onSubmit={handleFilterChange} />
 				<Box sx={{ pb: 2, pt: 2, height: 371, width: '100%' }}>
 					<DataGrid
 						rows={voluntarios.data}
 						columns={columns}
 						columnVisibilityModel={{
-							full_name: true,
+							name: true,
 							email: width > 600,
 							volunteer_degree: width > 600,
+							volunteer_language: width > 600,
 							location: width > 600,
 							action: true
 						}}
@@ -207,7 +260,7 @@ export const VoluntariosTable = () => {
 						onPaginationModelChange={handlePageChange}
 						onSortModelChange={handleSortChange}
 						onRowClick={(params) => {
-							handleEdit(params.row.id);
+							handleSelect(params.row.id);
 						}}
 					/>
 				</Box>

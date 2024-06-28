@@ -12,7 +12,7 @@ import {
 	deleteTeam,
 	getTeamById,
 	updateTeam
-} from '../../services/team.service';
+} from '../../services/teams/team.service';
 
 export const TeamCreateEditPage = () => {
 	const { id } = useParams();

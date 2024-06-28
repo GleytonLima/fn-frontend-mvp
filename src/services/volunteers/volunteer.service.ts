@@ -1,11 +1,12 @@
 import { VolunteerSchema } from '../../components/Volunteers/VolunteerForm';
-import { SortParam } from '../../models/pagination';
+import { QueryParam, SortParam } from '../../models/pagination';
 import api from '../api.config';
 
 export const listVolunteers = async (pagination: {
 	limit: number;
 	offset: number;
 	sortingParams?: SortParam[];
+	queryParams?: QueryParam[];
 }) => {
 	try {
 		const queryParams = new URLSearchParams();
@@ -13,8 +14,13 @@ export const listVolunteers = async (pagination: {
 		queryParams.append('offset', pagination.limit * pagination.offset + '');
 		queryParams.append(
 			'expands',
-			'volunteer_degree,volunteer_postgraduate_degree,location'
+			'volunteer_degree,volunteer_postgraduate_degree,location,volunteer_language'
 		);
+		if (pagination.queryParams) {
+			pagination.queryParams.forEach((queryItem) => {
+				queryParams.append(`${queryItem.field}`, queryItem.value);
+			});
+		}
 		if (pagination.sortingParams) {
 			pagination.sortingParams.forEach((sortItem) => {
 				queryParams.append('sort', `${sortItem.field},${sortItem.sort}`);

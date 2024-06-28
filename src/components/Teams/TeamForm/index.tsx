@@ -1,10 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import {
+	Box,
+	Button,
+	Divider,
+	Grid,
+	TextField,
+	Typography
+} from '@mui/material';
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
+import { TeamVolunteer } from '../TeamVolunteer';
+import { TeamVolunteerProfile } from '../TeamVolunteerProfile';
 
 const teamFormSchema = z.object({
 	id: z.number().optional(),
@@ -103,6 +112,27 @@ export const TeamForm = ({ onSubmit, team, onDelete }: TeamFormProps) => {
 					</Box>
 				</Grid>
 			</form>
+			{team?.id && (
+				<>
+					<Box mt={3}>
+						<TeamVolunteerProfile
+							team={team}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
+					<Divider />
+					<Box mt={2} mb={2}>
+						<TeamVolunteer
+							team={team}
+							onSubmit={(e) => {
+								console.log(e);
+							}}
+						/>
+					</Box>
+				</>
+			)}
 		</>
 	);
 };

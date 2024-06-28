@@ -46,7 +46,7 @@ type LocationSchema = z.infer<typeof locationSchema>;
 
 const volunteerSchema = z.object({
 	id: z.number().optional(),
-	full_name: z.string().min(1),
+	name: z.string().min(1),
 	email: z.string().email(),
 	travel_availability: z.boolean().default(false),
 	phone_number: z.string().min(15),
@@ -67,7 +67,7 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 	const defaultVolunteer = (volunteer: VolunteerSchema) => {
 		return {
 			id: volunteer.id,
-			full_name: volunteer.full_name,
+			name: volunteer.name,
 			email: volunteer.email,
 			travel_availability: volunteer.travel_availability,
 			phone_number: volunteer.phone_number,
@@ -126,12 +126,12 @@ export const VolunteerForm = ({ onSubmit, volunteer }: VolunteerFormProps) => {
 				<Grid container spacing={3} padding={2}>
 					<Grid item xs={12}>
 						<TextField
-							{...register('full_name')}
+							{...register('name')}
 							label={t('Volunteer.name')}
 							variant="outlined"
 							fullWidth
-							error={!!errors.full_name}
-							helperText={errors.full_name && t('VolunteerForm.invalidName')}
+							error={!!errors.name}
+							helperText={errors.name && t('VolunteerForm.invalidName')}
 						/>
 					</Grid>
 					<Grid item xs={12}>

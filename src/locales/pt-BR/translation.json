@@ -104,7 +104,9 @@
 		"medicalExam": "Exame Médico",
 		"professionalBoard": "Conselho Profissional",
 		"medicalSpecialization": "Especialização Médica",
-		"training": "Treinamento"
+		"training": "Treinamento",
+		"volunteerProfile": "Perfil de Voluntário",
+		"teamRole": "Função na Equipe"
 	},
 	"VoluntarioCreateEditPage": {
 		"createTitle": "Cadastrar Voluntário",
@@ -257,7 +259,8 @@
 		"title": "Equipe",
 		"basicData": "Dados Básicos",
 		"invalidName": "Nome inválido",
-		"invalidDescription": "Descrição inválida"
+		"invalidDescription": "Descrição inválida",
+		"volunteerProfiles": "Perfis de Voluntário"
 	},
 	"TeamCreateEditPage": {
 		"createTitle": "Cadastrar Equipe",
@@ -295,5 +298,17 @@
 	},
 	"FilterBuilder": {
 		"saveFilter": "Salvar Características"
+	},
+	"TeamVolunteerProfile": {
+		"title": "Perfis de Voluntário",
+		"noRowsLabel": "Nenhum perfil de voluntário encontrado"
+	},
+	"BasicAutocompleteMultiple": {
+		"typeForMoreResults": "Digite para mais resultados...",
+		"invalidValue": "Valor inválido"
+	},
+	"TeamVolunteer": {
+		"title": "Voluntários",
+		"noRowsLabel": "Nenhum voluntário encontrado"
 	}
 }
