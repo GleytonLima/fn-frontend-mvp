@@ -86,7 +86,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 						path="/teams/:id/edit"
 						element={<TeamCreateEditPage />}
 					></Route>
-					<Route path="/volunteer-profile" element={<TeamsPage />}></Route>
+					<Route path="/teams" element={<TeamsPage />}></Route>
 					<Route
 						path="/volunteer-profiles/create"
 						element={<VolunteerProfileCreateEditPage />}

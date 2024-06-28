@@ -250,7 +250,8 @@
 		"description": "Descrição"
 	},
 	"TeamTable": {
-		"title": "Equipes"
+		"title": "Equipes",
+		"noRowsLabel": "Nenhuma equipe encontrada"
 	},
 	"TeamForm": {
 		"title": "Equipe",
@@ -289,7 +290,8 @@
 		"profileFilter": "Filtro de Perfil"
 	},
 	"VolunteerProfileTable": {
-		"title": "Perfis de Voluntário"
+		"title": "Perfis de Voluntário",
+		"noRowsLabel": "Nenhum perfil de voluntário encontrado"
 	},
 	"FilterBuilder": {
 		"saveFilter": "Salvar Características"
