@@ -5,14 +5,15 @@ import MissionConfigCard from '../../components/Missions/MissionConfigCard';
 
 const MissionViewPage: React.FC = () => {
 	const configs = [
-		{ id: 'team', title: 'Equipes', imageUrl: '/images/team.png' },
-		{ id: 'task', title: 'Tarefas', imageUrl: '/images/tasks.png' },
+		{ id: 'team', title: 'Equipes', imageUrl: '/images/team.svg' },
+		{ id: 'task', title: 'Tarefas', imageUrl: '/images/tasks.svg' },
 		{
 			id: 'communction',
 			title: 'Comunicações',
-			imageUrl: '/images/communications.png'
+			imageUrl: '/images/communications.svg'
 		},
-		{ id: 'report', title: 'Relatórios', imageUrl: '/images/reports.png' }
+		{ id: 'report', title: 'Relatórios', imageUrl: '/images/reports.svg' },
+		{ id: 'config', title: 'Configurações', imageUrl: '/images/config.svg' }
 	];
 
 	const handleSelection = (id: string) => {
